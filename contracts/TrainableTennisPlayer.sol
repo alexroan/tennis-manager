@@ -18,6 +18,9 @@ contract TrainableTennisPlayer is TennisPlayerBase {
 
     enum Attribute { agility, power, stamina, technique }
 
+    event Trained(uint indexed playerId, Attribute attribute);
+    event Rested(uint indexed playerId);
+
     // Train a player increasing an attribute
     function train(uint _id, Attribute _attr) public {
         // Only the owner of the player can train
@@ -41,6 +44,7 @@ contract TrainableTennisPlayer is TennisPlayerBase {
         else if (_attr == Attribute.technique) {
             players[_id].technique = castAdd8(players[_id].technique, attributeGainOnTrain);
         }
+        emit Trained(_id, _attr);
     }
 
     // Rest player, increasing condition
@@ -51,5 +55,6 @@ contract TrainableTennisPlayer is TennisPlayerBase {
         // Must have enough XP
         players[_id].xp = castSubtract256(players[_id].xp, xpCostToRest);
         players[_id].condition = castAdd8(players[_id].condition, conditionGainOnRest);
+        emit Rested(_id);
     }
 }
