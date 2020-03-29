@@ -3,9 +3,14 @@ pragma solidity ^0.5.5;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/ownership/Ownable.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/utils/SafeCast.sol";
 
 // TennisPlayer ERC721 Token
 contract TennisPlayerBase is ERC721, Ownable {
+
+    using SafeMath for uint;
+    using SafeCast for uint;
 
 	// Player information
 	struct Player {
@@ -50,4 +55,19 @@ contract TennisPlayerBase is ERC721, Ownable {
 		_safeMint(_to, id);
 		return id;
 	}
+
+	// Cast and add a uint8 to a uint8
+    function castAdd8(uint8 _a, uint8 _b) internal pure returns (uint8) {
+        return uint(_a).add(uint(_b)).toUint8();
+    }
+
+    // Cast and subtract a uint8 from uint8
+    function castSubtract8(uint8 _a, uint8 _b) internal pure returns (uint8) {
+        return uint(_a).sub(uint(_b)).toUint8();
+    }
+
+    // Cast and subtract a uint8 from a uint
+    function castSubtract256(uint _a, uint8 _b) internal pure returns (uint) {
+        return _a.sub(uint(_b));
+    }
 }

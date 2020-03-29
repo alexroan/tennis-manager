@@ -2,14 +2,8 @@
 pragma solidity ^0.5.5;
 
 import "./TennisPlayerBase.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
-import "@openzeppelin/contracts/utils/SafeCast.sol";
-
 
 contract TrainableTennisPlayer is TennisPlayerBase {
-
-    using SafeMath for uint;
-    using SafeCast for uint;
 
     // TODO - xp costs to change depending on current attribute level?
 
@@ -58,20 +52,4 @@ contract TrainableTennisPlayer is TennisPlayerBase {
         players[_id].xp = castSubtract256(players[_id].xp, xpCostToRest);
         players[_id].condition = castAdd8(players[_id].condition, conditionGainOnRest);
     }
-
-    // Cast and add a uint8 to a uint8
-    function castAdd8(uint8 _a, uint8 _b) private pure returns (uint8) {
-        return uint(_a).add(uint(_b)).toUint8();
-    }
-
-    // Cast and subtract a uint8 from uint8
-    function castSubtract8(uint8 _a, uint8 _b) private pure returns (uint8) {
-        return uint(_a).sub(uint(_b)).toUint8();
-    }
-
-    // Cast and subtract a uint8 from a uint
-    function castSubtract256(uint _a, uint8 _b) private pure returns (uint) {
-        return _a.sub(uint(_b));
-    }
-
 }
