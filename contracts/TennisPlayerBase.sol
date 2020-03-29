@@ -40,7 +40,7 @@ contract TennisPlayerBase is ERC721, Ownable {
 		uint8 _stamina,
 		uint8 _technique,
 		address _to
-	) public onlyOwner
+	) public onlyOwner returns (uint)
 	{
 		uint id = players.length;
 		players.push(
@@ -48,5 +48,6 @@ contract TennisPlayerBase is ERC721, Ownable {
 				_agility, _power, _stamina, _technique)
 		);
 		_safeMint(_to, id);
+		return id;
 	}
 }
