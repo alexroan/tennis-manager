@@ -14,13 +14,13 @@ contract TrainableTennisPlayer is TennisPlayerBase {
     // TODO - xp costs to change depending on current attribute level?
 
     // Training costs
-    uint8 conditionCostToTrain = 5;
-    uint8 xpCostToTrain = 8;
-    uint8 attributeGainOnTrain = 1;
+    uint8 public conditionCostToTrain = 5;
+    uint8 public xpCostToTrain = 8;
+    uint8 public attributeGainOnTrain = 1;
 
     // Rest costs and gains
-    uint8 xpCostToRest = 6;
-    uint8 conditionGainOnRest = 15;
+    uint8 public xpCostToRest = 6;
+    uint8 public conditionGainOnRest = 15;
 
     enum Attribute { agility, power, stamina, technique }
 
