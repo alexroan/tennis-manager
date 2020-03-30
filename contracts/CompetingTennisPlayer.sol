@@ -52,6 +52,46 @@ contract CompetingTennisPlayer is TennisPlayerBase {
         _delist(_id);
     }
 
+    // Play match against opponent
+    function playMatch(uint _id, uint _opponentId) public {
+        // Only the owner of the player can train
+        require(ownerOf(_id) == msg.sender, "Must be owner of player to enlist");
+        // Must be enlisted
+        require(enlistedPlayers[_id] == true, "Must be enlisted");
+        // Opponent must be enlisted
+        require(enlistedPlayers[_opponentId] == true, "Opponent must be enlisted");
+        // Ensure player's condition is high enough
+        _requireMatchCondition(_id, "Player not match condition");
+        // Ensure opponents's condition is high enough
+        _requireMatchCondition(_opponentId, "Opponent not match condition");
+
+        // TODO move this to train?
+        // TODO Better match mechanics
+        uint playerScore = uint(players[_id].agility)
+            .add(uint(players[_id].power))
+            .add(uint(players[_id].stamina))
+            .add(uint(players[_id].technique));
+
+        uint opponentScore = uint(players[_opponentId].agility)
+            .add(uint(players[_opponentId].power))
+            .add(uint(players[_opponentId].stamina))
+            .add(uint(players[_opponentId].technique));
+
+        // condition changes
+        players[_id].condition = uint(players[_id].condition).sub(uint(conditionCostToPlay)).toUint8();
+        players[_opponentId].condition = uint(players[_opponentId].condition).sub(uint(conditionCostToPlay)).toUint8();
+        // determine winner
+        (uint winner, uint loser) = (playerScore >= opponentScore) ? (_id, _opponentId) : (_opponentId, _id);
+        // xp changes
+        players[winner].xp = uint(players[winner].xp).add(uint(xpGainWin));
+        players[loser].xp = uint(players[loser].xp).add(uint(xpGainLose));
+        // emit matchplayed
+        emit MatchPlayed(_id, _opponentId, winner);
+        // check condition again
+        _isMatchCondition(_id);
+        _isMatchCondition(_opponentId);
+    }
+
     // Perform the delisting
     function _delist(uint _id) private {
         // Delist
@@ -76,47 +116,5 @@ contract CompetingTennisPlayer is TennisPlayerBase {
             return false;
         }
         return true;
-    }
-
-    // Play match against opponent
-    function playMatch(uint _id, uint _opponentId) public {
-        // Only the owner of the player can train
-        require(ownerOf(_id) == msg.sender, "Must be owner of player to enlist");
-        // Must be enlisted
-        require(enlistedPlayers[_id] == true, "Must be enlisted");
-        // Opponent must be enlisted
-        require(enlistedPlayers[_opponentId] == true, "Opponent must be enlisted");
-        // Ensure player's condition is high enough
-        _requireMatchCondition(_id, "Player not match condition");
-        // Ensure opponents's condition is high enough
-        _requireMatchCondition(_opponentId, "Opponent not match condition");
-
-        // TODO move this to train?
-        // TODO Better match mechanics
-        uint playerScore =
-            uint(players[_id].agility)
-            .add(uint(players[_id].power))
-            .add(uint(players[_id].stamina))
-            .add(uint(players[_id].technique));
-
-        uint opponentScore =
-            uint(players[_opponentId].agility)
-            .add(uint(players[_opponentId].power))
-            .add(uint(players[_opponentId].stamina))
-            .add(uint(players[_opponentId].technique));
-
-        // condition changes
-        players[_id].condition = uint(players[_id].condition).sub(uint(conditionCostToPlay)).toUint8();
-        players[_opponentId].condition = uint(players[_opponentId].condition).sub(uint(conditionCostToPlay)).toUint8();
-        // determine winner
-        (uint winner, uint loser) = (playerScore >= opponentScore) ? (_id, _opponentId) : (_opponentId, _id);
-        // xp changes
-        players[winner].xp = uint(players[winner].xp).add(uint(xpGainWin));
-        players[loser].xp = uint(players[loser].xp).add(uint(xpGainLose));
-        // emit matchplayed
-        emit MatchPlayed(_id, _opponentId, winner);
-        // check condition again
-        _isMatchCondition(_id);
-        _isMatchCondition(_opponentId);
     }
 }
