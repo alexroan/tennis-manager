@@ -18,7 +18,7 @@ contract CompetingTennisPlayer is TennisPlayerBase {
     uint8 public xpGainLose = 5;
 
     // enlistedPlayers
-    mapping(uint => bool) enlistedPlayers;
+    mapping(uint => bool) public enlistedPlayers;
 
     // enlistEvent
     event Enlist(uint indexed playerId);

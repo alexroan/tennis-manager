@@ -11,4 +11,17 @@ contract PlayerTestValues {
     uint8 internal power = 6;
     uint8 internal stamina = 4;
     uint8 internal technique = 5;
+
+
+    bool internal p2isBot = false;
+    uint internal p2xp = 100;
+    string internal p2name = "Andy Murray";
+    uint8 internal p2age = 29;
+    uint8 internal p2height = 180;
+    uint8 internal p2condition = 200;
+    uint8 internal p2agility = 50;
+    uint8 internal p2power = 60;
+    uint8 internal p2stamina = 40;
+    uint8 internal p2technique = 50;
+
 }

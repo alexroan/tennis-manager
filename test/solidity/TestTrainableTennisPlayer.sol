@@ -13,7 +13,6 @@ contract TestTrainableTennisPlayer is ERC721Holder, PlayerTestValues {
     using SafeMath for uint;
 
     TrainableTennisPlayer trainable;
-    address tokenOwner;
     uint playerId;
 
     uint8 conditionCost;
@@ -24,9 +23,8 @@ contract TestTrainableTennisPlayer is ERC721Holder, PlayerTestValues {
         trainable = new TrainableTennisPlayer();
         conditionCost = trainable.conditionCostToTrain();
         attributeGainOnTrain = trainable.attributeGainOnTrain();
-        tokenOwner = address(this);
         playerId = trainable.newPlayer(isBot, xp, name, age, height, condition, agility,
-            power, stamina, technique, tokenOwner);
+            power, stamina, technique, address(this));
     }
 
     function testItRests() public {
@@ -93,4 +91,8 @@ contract TestTrainableTennisPlayer is ERC721Holder, PlayerTestValues {
         Assert.equal(uint(player.xp), uint(xp).sub(uint(xpCost)), "Must deduct XP");
         Assert.equal(uint(player.technique), uint(technique).add(uint(attributeGainOnTrain)), "Must increase technique");
     }
+
+    //TODO test only owner of token can train or rest
+    //TODO test rest and can only be done with enough xp
+    //TODO test train can only be done with enough condition
 }
