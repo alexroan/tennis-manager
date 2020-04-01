@@ -1,13 +1,13 @@
 // Author: Alex Roan
 pragma solidity ^0.5.5;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/ownership/Ownable.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/SafeCast.sol";
 
 // TennisPlayer ERC721 Token
-contract TennisPlayerBase is ERC721, Ownable {
+contract TennisPlayerBase is ERC721Enumerable, Ownable {
 
     using SafeMath for uint;
     using SafeCast for uint;
