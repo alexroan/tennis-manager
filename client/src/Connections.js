@@ -1,26 +1,27 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import { loadWeb3, loadWallet, loadGame } from './redux/interactions';
-import { web3Selector, accountSelector, gameSelector } from './redux/selectors';
+import { loadWeb3, loadWallet, loadGameContract, loadTennisPlayerContract, loadOwnedPlayers } from './redux/interactions';
+import { web3Selector, accountSelector, gameSelector, tennisPlayerSelector } from './redux/selectors';
 
 class Connections extends Component {
     render() {
-        const {dispatch, web3, account, game} = this.props;
+        const {dispatch, web3, account, game, tennisPlayer} = this.props;
 
         const connectBlockchain = async (e) => {
             e.preventDefault();
             await loadWeb3(dispatch);
         }
-
-        const connectWallet = async (e) => {
-            e.preventDefault();
-            await loadWallet(dispatch, web3);
-        }
         
         const connectGame = async (e) => {
             e.preventDefault();
-            console.log("connecting game");
-            loadGame(dispatch, web3);
+            const gameContract = await loadGameContract(dispatch, web3);
+            await loadTennisPlayerContract(dispatch, web3, gameContract);
+        }
+
+        const connectWallet = async (e) => {
+            e.preventDefault();
+            const account = await loadWallet(dispatch, web3);
+            await loadOwnedPlayers(dispatch, tennisPlayer, account);
         }
 
         return (
@@ -69,7 +70,8 @@ function mapStateToProps(state){
 	return {
         web3: web3Selector(state),
         account: accountSelector(state),
-        game: gameSelector(state)
+        game: gameSelector(state),
+        tennisPlayer: tennisPlayerSelector(state)
 	}
 }
 

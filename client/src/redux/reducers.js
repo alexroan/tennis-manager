@@ -5,24 +5,40 @@ function web3(state = {}, action) {
         case 'WEB3_LOADED':
             return { ...state, connection: action.connection };
         case 'ACCOUNT_LOADED':
-            return { ...state, account: action.account };
+            return { ...state, account: action.account, accountLoaded: true};
         case 'GAME_LOADED':
-            return { ...state, game: action.game };
+            return { ...state, game: action.game, gameLoaded: true };
+        case 'TENNIS_PLAYER_LOADED':
+            return { ...state, tennisPlayer: action.tennisPlayer, tennisPlayerLoaded: true };
         default:
             return state;
     }
 }
 
-function game(state = {}, action) {
+function user(state = {}, action) {
     switch (action.type) {
-        
+        case 'OWNED_PLAYERS_LOADED':
+            return { ...state, ownedPlayers: action.ownedPlayers}
+        default:
+            return state;
+    }
+}
+
+function newPlayer(state = {}, action) {
+    switch (action.type) {
+        case 'NEW_PLAYER_NAME_CHANGE':
+            return { ...state, name: action.name}
+        case 'NEW_PLAYER_AGE_CHANGE':
+            return { ...state, age: action.age}
+        case 'NEW_PLAYER_HEIGHT_CHANGE':
+            return { ...state, height: action.height}
         default:
             return state;
     }
 }
 
 const rootReducer = new combineReducers({
-    web3, game
+    web3, user, newPlayer
 });
 
 export default rootReducer;

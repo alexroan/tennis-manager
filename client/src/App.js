@@ -7,9 +7,7 @@ class App extends Component {
 
 	render(){
 		return (
-			<div className="container py-2">
-				<Content />
-			</div>
+			<Content />
 		)
 	}
 

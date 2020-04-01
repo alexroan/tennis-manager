@@ -6,4 +6,7 @@ import "./TrainableTennisPlayer.sol";
 
 contract TennisPlayer is CompetingTennisPlayer, TrainableTennisPlayer {
 
+    function myPlayers() public view returns (uint[] memory) {
+        return _tokensOfOwner(msg.sender);
+    }
 }
