@@ -19,9 +19,9 @@ contract TestCompetingTennisPlayer is ERC721Holder, PlayerTestValues {
     function beforeEach() public {
         address tokenOwner = address(this);
         competing = new CompetingTennisPlayer();
-        player1 = competing.newPlayer(isBot, xp, name, age, height, condition, agility,
+        player1 = competing.newPlayer(xp, name, age, height, condition, agility,
             power, stamina, technique, tokenOwner);
-        player2 = competing.newPlayer(p2isBot, p2xp, p2name, p2age, p2height, p2condition, p2agility,
+        player2 = competing.newPlayer(p2xp, p2name, p2age, p2height, p2condition, p2agility,
             p2power, p2stamina, p2technique, tokenOwner);
     }
 

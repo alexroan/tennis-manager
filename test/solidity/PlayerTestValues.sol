@@ -1,7 +1,6 @@
 pragma solidity ^0.5.5;
 
 contract PlayerTestValues {
-    bool internal isBot = false;
     uint internal xp = 100;
     string internal name = "Alex Roan";
     uint8 internal age = 27;
@@ -13,7 +12,6 @@ contract PlayerTestValues {
     uint8 internal technique = 5;
 
 
-    bool internal p2isBot = false;
     uint internal p2xp = 100;
     string internal p2name = "Andy Murray";
     uint8 internal p2age = 29;

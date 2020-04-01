@@ -23,7 +23,7 @@ contract TestTrainableTennisPlayer is ERC721Holder, PlayerTestValues {
         trainable = new TrainableTennisPlayer();
         conditionCost = trainable.conditionCostToTrain();
         attributeGainOnTrain = trainable.attributeGainOnTrain();
-        playerId = trainable.newPlayer(isBot, xp, name, age, height, condition, agility,
+        playerId = trainable.newPlayer(xp, name, age, height, condition, agility,
             power, stamina, technique, address(this));
     }
 

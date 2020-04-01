@@ -1,5 +1,5 @@
-var TrainableTennisPlayer = artifacts.require("./TrainableTennisPlayer.sol");
+var Game = artifacts.require("./Game.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(TrainableTennisPlayer);
+  deployer.deploy(Game);
 };

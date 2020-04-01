@@ -15,7 +15,6 @@ contract TennisPlayerBase is ERC721, Ownable {
 	// Player information
 	struct Player {
 		// game details
-		bool isBot;
 		uint xp;
 		// personal details
 		string name;
@@ -34,7 +33,6 @@ contract TennisPlayerBase is ERC721, Ownable {
 
 	// Create new player on behalf of manager
 	function newPlayer(
-		bool _isBot,
 		uint _xp,
 		string memory _name,
 		uint8 _age,
@@ -49,7 +47,7 @@ contract TennisPlayerBase is ERC721, Ownable {
 	{
 		uint id = players.length;
 		players.push(
-			Player( _isBot, _xp, _name, _age, _height, _condition,
+			Player(_xp, _name, _age, _height, _condition,
 				_agility, _power, _stamina, _technique)
 		);
 		_safeMint(_to, id);

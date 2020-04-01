@@ -13,12 +13,11 @@ contract TestTennisPlayerBase is ERC721Holder, PlayerTestValues {
     function testItCreatesAPlayer() public {
         TennisPlayerBase basePlayer = new TennisPlayerBase();
         address tokenOwner = address(this);
-        uint id = basePlayer.newPlayer(isBot, xp, name, age, height, condition, agility,
+        uint id = basePlayer.newPlayer(xp, name, age, height, condition, agility,
             power, stamina, technique, tokenOwner);
         Assert.equal(id, 0, "It should create the first player");
 
         TennisPlayerBase.Player memory player = basePlayer.getPlayer(id);
-        Assert.isFalse(player.isBot, "wrong bot value");
         Assert.equal(player.xp, xp, "wrong xp");
         Assert.equal(player.name, name, "wrong name");
         Assert.equal(uint(player.age), uint(age), "wrong age");
