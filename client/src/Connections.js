@@ -3,23 +3,38 @@ import {connect} from 'react-redux';
 import { loadWeb3, loadWallet, loadGameContract, loadTennisPlayerContract, loadOwnedPlayers } from './redux/interactions';
 import { web3Selector, accountSelector, gameSelector, tennisPlayerSelector } from './redux/selectors';
 
+const preventDefaultIfNeeded = async (e) => {
+    if (!e.defaultPrevented) {
+        e.preventDefault();
+    }
+}
+
 class Connections extends Component {
     render() {
         const {dispatch, web3, account, game, tennisPlayer} = this.props;
 
         const connectBlockchain = async (e) => {
-            e.preventDefault();
+            preventDefaultIfNeeded(e);
             await loadWeb3(dispatch);
         }
         
         const connectGame = async (e) => {
-            e.preventDefault();
+            preventDefaultIfNeeded(e);
             const gameContract = await loadGameContract(dispatch, web3);
             await loadTennisPlayerContract(dispatch, web3, gameContract);
         }
 
         const connectWallet = async (e) => {
+            preventDefaultIfNeeded(e);
+            const account = await loadWallet(dispatch, web3);
+            await loadOwnedPlayers(dispatch, tennisPlayer, account);
+        }
+
+        const connectAll = async (e) => {
             e.preventDefault();
+            const web3 = await loadWeb3(dispatch);
+            const gameContract = await loadGameContract(dispatch, web3);
+            const tennisPlayer = await loadTennisPlayerContract(dispatch, web3, gameContract);
             const account = await loadWallet(dispatch, web3);
             await loadOwnedPlayers(dispatch, tennisPlayer, account);
         }
@@ -55,6 +70,19 @@ class Connections extends Component {
                                 <div className="col-12">
                                     <button type="submit" className={`w-100 btn text-truncate ${(game === null) ? "disabled btn-danger" : (account !== null) ? "btn-success" : "btn-warning" }`}>
                                         {(account !== null) ? account : "Connect Wallet"}
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div className="row justify-content-center">
+                    <div className="col-4">
+                        <form onSubmit={connectAll}>
+                            <div className="form-group row">
+                                <div className="col-12">
+                                    <button type="submit" className={`w-100 btn text-truncate ${(account !== null) ? "btn-success" : "btn-primary"}`}>
+                                        {(account !== null) ? "Connect All Again" : "Connect All"}
                                     </button>
                                 </div>
                             </div>

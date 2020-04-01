@@ -19,6 +19,8 @@ function user(state = {}, action) {
     switch (action.type) {
         case 'OWNED_PLAYERS_LOADED':
             return { ...state, ownedPlayers: action.ownedPlayers}
+        case 'PLAYER_SELECTED':
+            return { ...state, selectedPlayerId: action.id}
         default:
             return state;
     }

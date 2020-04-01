@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import { tennisPlayerSelector, accountLoadedSelector, gameLoadedSelector, tennisPlayerLoadedSelector, accountSelector, ownedPlayersSelector, newPlayerNameSelector, newPlayerAgeSelector, newPlayerHeightSelector, gameSelector } from './redux/selectors';
-import { newPlayerNameChange, newPlayerAgeChange, newPlayerHeightChange} from "./redux/actions";
+import { newPlayerNameChange, newPlayerAgeChange, newPlayerHeightChange, playerSelected} from "./redux/actions";
 import { createNewPlayer } from './redux/interactions';
 
 const getOwnedPlayers = (props) => {
-    const {ownedPlayers} = props;
+    const {dispatch, ownedPlayers} = props;
     console.log(ownedPlayers);
     return ownedPlayers.map((id) => 
-        <li key={id} className="list-group-item">{id}</li>
+        <a href="#" onClick={() => dispatch(playerSelected(id))} key={id} className="list-group-item">{id}</a>
     );
 }
 
@@ -33,9 +33,9 @@ class PlayerList extends Component {
                     <div className="card-header">
                         Player List
                     </div>
-                    <ul className="list-group list-group-flush">
-                        {this.props.showOwnedPlayers ? getOwnedPlayers(this.props) : <li className="list-group-item">No Players</li>}
-                    </ul>
+                    <div className="list-group list-group-flush">
+                        {this.props.showOwnedPlayers ? getOwnedPlayers(this.props) : <a className="list-group-item">No Players</a>}
+                    </div>
                     <div className="card-body">
                         Create New Player
                         <form onSubmit={newPlayer}>

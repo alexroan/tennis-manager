@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import Connections from './Connections';
 import PlayerList from "./PlayerList";
+import PlayerDetails from "./PlayerDetails";
 
 class Content extends Component {
     render() {
@@ -10,6 +11,7 @@ class Content extends Component {
                 <Connections />
                 <div className="row">
                     <PlayerList />
+                    <PlayerDetails />
                 </div>
             </div>
         )

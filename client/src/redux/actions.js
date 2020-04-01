@@ -51,3 +51,10 @@ export function newPlayerHeightChange(height){
         height
     }
 }
+
+export function playerSelected(id){
+    return {
+        type: 'PLAYER_SELECTED',
+        id
+    }
+}
