@@ -27,15 +27,18 @@ export const tennisPlayerLoadedSelector = createSelector(tennisPlayerLoaded, a =
 const ownedPlayers = state => get(state, 'user.ownedPlayers', []);
 export const ownedPlayersSelector = createSelector(ownedPlayers, a => a);
 
-const selectedPlayerId = state => get(state, 'user.selectedPlayerId', []);
+const selectedPlayerId = state => get(state, 'user.selectedPlayerId', false);
 export const selectedPlayerIdSelector = createSelector(selectedPlayerId, a => a);
 
+const selectedPlayerDetails = state => get(state, 'user.selectedPlayerDetails', false);
+export const selectedPlayerDetailsSelector = createSelector(selectedPlayerDetails, a => a);
+
 // NEW PLAYER
-const newPlayerName = state => get(state, 'newPlayer.name', []);
+const newPlayerName = state => get(state, 'newPlayer.name', null);
 export const newPlayerNameSelector = createSelector(newPlayerName, a => a);
 
-const newPlayerAge = state => get(state, 'newPlayer.age', []);
+const newPlayerAge = state => get(state, 'newPlayer.age', null);
 export const newPlayerAgeSelector = createSelector(newPlayerAge, a => a);
 
-const newPlayerHeight = state => get(state, 'newPlayer.height', []);
+const newPlayerHeight = state => get(state, 'newPlayer.height', null);
 export const newPlayerHeightSelector = createSelector(newPlayerHeight, a => a);

@@ -1,7 +1,7 @@
 import getWeb3 from "../getWeb3";
 import Game from "../contracts/Game.json";
 import TennisPlayer from "../contracts/TennisPlayer.json";
-import {web3Loaded, accountLoaded, gameLoaded, tennisPlayerLoaded, ownedPlayersLoaded} from "./actions";
+import {web3Loaded, accountLoaded, gameLoaded, tennisPlayerLoaded, ownedPlayersLoaded, playerDetailsLoaded} from "./actions";
 
 export const loadWeb3 = async (dispatch) => {
     const web3 = await getWeb3();
@@ -44,10 +44,8 @@ export const loadOwnedPlayers = async (dispatch, tennisPlayer, account) => {
 }
 
 export const createNewPlayer = async (dispatch, game, account, name, age, height) => {
-    console.log(game, account, name, age, height);
     game.methods.newPlayer(name, age, height).send({from: account})
         .on('transactionHash', (hash) => {
-            // dispatch(creatingNewPlayer(id));
             console.log("hash");
         })
         .on('receipt', (receipt) => {
@@ -56,4 +54,10 @@ export const createNewPlayer = async (dispatch, game, account, name, age, height
         .on('confirmation', (confirmation) => {
             console.log("confirmation");
         });
+}
+
+export const loadSelectedPlayer = async (dispatch, tennisPlayer, id) => {
+    const player = await tennisPlayer.methods.players(id).call();
+    dispatch(playerDetailsLoaded(player));
+    return player;
 }

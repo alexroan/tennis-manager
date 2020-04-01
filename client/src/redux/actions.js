@@ -52,9 +52,16 @@ export function newPlayerHeightChange(height){
     }
 }
 
-export function playerSelected(id){
+export function playerIdSelected(id){
     return {
-        type: 'PLAYER_SELECTED',
+        type: 'PLAYER_ID_SELECTED',
         id
+    }
+}
+
+export function playerDetailsLoaded(player){
+    return {
+        type: 'PLAYER_DETAILS_SELECTED',
+        player
     }
 }

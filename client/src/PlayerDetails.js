@@ -9,6 +9,9 @@ class PlayerDetails extends Component {
                     <div className="card-header">
                         Player Details
                     </div>
+                    <div>
+                        
+                    </div>
                 </div>
             </div>
         );
