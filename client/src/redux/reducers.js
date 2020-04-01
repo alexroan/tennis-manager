@@ -4,17 +4,25 @@ function web3(state = {}, action) {
     switch (action.type) {
         case 'WEB3_LOADED':
             return { ...state, connection: action.connection };
-        case 'ACCOUNT_LOADING':
-            return { ...state, accountLoading: true};
         case 'ACCOUNT_LOADED':
-            return { ...state, account: action.account, accountLoading: false };
+            return { ...state, account: action.account };
+        case 'GAME_LOADED':
+            return { ...state, game: action.game };
+        default:
+            return state;
+    }
+}
+
+function game(state = {}, action) {
+    switch (action.type) {
+        
         default:
             return state;
     }
 }
 
 const rootReducer = new combineReducers({
-    web3
+    web3, game
 });
 
 export default rootReducer;

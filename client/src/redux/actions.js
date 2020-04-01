@@ -4,3 +4,17 @@ export function web3Loaded(connection){
         connection
     }
 }
+
+export function accountLoaded(account){
+    return {
+        type: 'ACCOUNT_LOADED',
+        account
+    }
+}
+
+export function gameLoaded(game){
+    return {
+        type: 'GAME_LOADED',
+        game
+    }
+}
