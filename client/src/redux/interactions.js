@@ -45,14 +45,17 @@ export const loadOwnedPlayers = async (dispatch, tennisPlayer, account) => {
 
 export const createNewPlayer = async (dispatch, game, account, name, age, height) => {
     game.methods.newPlayer(name, age, height).send({from: account})
-        .on('transactionHash', (hash) => {
+        .once('transactionHash', (hash) => {
             console.log("hash");
         })
-        .on('receipt', (receipt) => {
+        .once('receipt', (receipt) => {
             console.log("receipt");
         })
         .on('confirmation', (confirmation) => {
             console.log("confirmation");
+        })
+        .on('error', (error) => {
+            console.log(error);
         });
 }
 

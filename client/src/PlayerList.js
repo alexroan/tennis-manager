@@ -1,20 +1,19 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import { tennisPlayerSelector, accountLoadedSelector, gameLoadedSelector, tennisPlayerLoadedSelector, accountSelector, ownedPlayersSelector, newPlayerNameSelector, newPlayerAgeSelector, newPlayerHeightSelector, gameSelector } from './redux/selectors';
-import { newPlayerNameChange, newPlayerAgeChange, newPlayerHeightChange, playerIdSelected} from "./redux/actions";
+import { newPlayerNameChange, newPlayerAgeChange, newPlayerHeightChange} from "./redux/actions";
 import { createNewPlayer, loadSelectedPlayer } from './redux/interactions';
 
 const playerSelected = (props, id) => {
+    console.log(id);
     const {dispatch, tennisPlayer} = props;
-    dispatch(playerIdSelected(id));
     loadSelectedPlayer(dispatch, tennisPlayer, id);
 }
 
 const getOwnedPlayers = (props) => {
     const {ownedPlayers} = props;
-    console.log(ownedPlayers);
     return ownedPlayers.map((id) => 
-        <a href="#" onClick={playerSelected(props, id)} key={id} className="list-group-item">{id}</a>
+        <a href="/" onClick={playerSelected(props, id)} key={id} className="list-group-item">{id}</a>
     );
 }
 

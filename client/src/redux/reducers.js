@@ -19,8 +19,6 @@ function user(state = {}, action) {
     switch (action.type) {
         case 'OWNED_PLAYERS_LOADED':
             return { ...state, ownedPlayers: action.ownedPlayers}
-        case 'PLAYER_ID_SELECTED':
-            return { ...state, selectedPlayerId: action.id}
         case 'PLAYER_DETAILS_SELECTED':
             return { ...state, selectedPlayerDetails: action.player}
         default:

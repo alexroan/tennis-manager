@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import { loadWeb3, loadWallet, loadGameContract, loadTennisPlayerContract, loadOwnedPlayers } from './redux/interactions';
 import { web3Selector, accountSelector, gameSelector, tennisPlayerSelector } from './redux/selectors';
+import { subscribeToEvents } from './redux/subscriptions';
 
 const preventDefaultIfNeeded = async (e) => {
     if (!e.defaultPrevented) {
@@ -21,13 +22,15 @@ class Connections extends Component {
         const connectGame = async (e) => {
             preventDefaultIfNeeded(e);
             const gameContract = await loadGameContract(dispatch, web3);
-            await loadTennisPlayerContract(dispatch, web3, gameContract);
+            const tennisPlayer = await loadTennisPlayerContract(dispatch, web3, gameContract);
+            
         }
 
         const connectWallet = async (e) => {
             preventDefaultIfNeeded(e);
             const account = await loadWallet(dispatch, web3);
             await loadOwnedPlayers(dispatch, tennisPlayer, account);
+            subscribeToEvents(dispatch, tennisPlayer, account);
         }
 
         const connectAll = async (e) => {
@@ -36,6 +39,7 @@ class Connections extends Component {
             const gameContract = await loadGameContract(dispatch, web3);
             const tennisPlayer = await loadTennisPlayerContract(dispatch, web3, gameContract);
             const account = await loadWallet(dispatch, web3);
+            subscribeToEvents(dispatch, tennisPlayer, account);
             await loadOwnedPlayers(dispatch, tennisPlayer, account);
         }
 

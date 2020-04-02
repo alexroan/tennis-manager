@@ -27,9 +27,6 @@ export const tennisPlayerLoadedSelector = createSelector(tennisPlayerLoaded, a =
 const ownedPlayers = state => get(state, 'user.ownedPlayers', []);
 export const ownedPlayersSelector = createSelector(ownedPlayers, a => a);
 
-const selectedPlayerId = state => get(state, 'user.selectedPlayerId', false);
-export const selectedPlayerIdSelector = createSelector(selectedPlayerId, a => a);
-
 const selectedPlayerDetails = state => get(state, 'user.selectedPlayerDetails', false);
 export const selectedPlayerDetailsSelector = createSelector(selectedPlayerDetails, a => a);
 
