@@ -13,7 +13,7 @@ const playerSelected = (props, id) => {
 const getOwnedPlayers = (props) => {
     const {ownedPlayers} = props;
     return ownedPlayers.map((id) => 
-        <a href="/" onClick={playerSelected(props, id)} key={id} className="list-group-item">{id}</a>
+        <a href="#" onClick={() => {playerSelected(props, id)}} key={id} className="list-group-item">{id}</a>
     );
 }
 
