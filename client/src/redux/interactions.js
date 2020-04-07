@@ -2,6 +2,7 @@ import getWeb3 from "../getWeb3";
 import Game from "../contracts/Game.json";
 import TennisPlayer from "../contracts/TennisPlayer.json";
 import {web3Loaded, accountLoaded, gameLoaded, tennisPlayerLoaded, ownedPlayersLoaded, playerDetailsLoaded} from "./actions";
+import { subscribeToEvents, subscribeToAccountsChanging } from "./subscriptions";
 
 export const loadWeb3 = async (dispatch) => {
     const web3 = await getWeb3();
@@ -28,6 +29,13 @@ export const loadTennisPlayerContract = async (dispatch, web3, game) => {
     );
     dispatch(tennisPlayerLoaded(instance));
     return instance;
+}
+
+export const loadWalletDetails = async (dispatch, web3, tennisPlayer) => {
+    const account = await loadWallet(dispatch, web3);
+    await loadOwnedPlayers(dispatch, tennisPlayer, account);
+    subscribeToEvents(dispatch, tennisPlayer, account, web3);
+    subscribeToAccountsChanging(dispatch, web3, tennisPlayer);
 }
 
 export const loadWallet = async (dispatch, web3) => {
