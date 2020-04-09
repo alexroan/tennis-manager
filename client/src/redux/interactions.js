@@ -1,7 +1,7 @@
 import getWeb3 from "../getWeb3";
 import Game from "../contracts/Game.json";
 import TennisPlayer from "../contracts/TennisPlayer.json";
-import {web3Loaded, accountLoaded, gameLoaded, tennisPlayerLoaded, ownedPlayersLoaded, playerDetailsLoaded, clearSelectedPlayer, trainableAttributeSelected} from "./actions";
+import {web3Loaded, accountLoaded, gameLoaded, tennisPlayerLoaded, ownedPlayersLoaded, playerDetailsLoaded, clearSelectedPlayer, trainableAttributeSelected, trainingDetailsLoaded} from "./actions";
 import { subscribeToEvents, subscribeToAccountsChanging } from "./subscriptions";
 
 export const loadWeb3 = async (dispatch) => {
@@ -79,4 +79,13 @@ export const unselectPlayer = async (dispatch) => {
 
 export const selectTrainableAttribute = (dispatch, name, id) => {
     dispatch(trainableAttributeSelected(name, id));
+}
+
+export const loadTrainingCosts = async (dispatch, tennisPlayer) => {
+    const conditionCostToTrain = await tennisPlayer.methods.conditionCostToTrain().call();
+    const xpCostToTrain = await tennisPlayer.methods.xpCostToTrain().call();
+    const attributeGain = await tennisPlayer.methods.attributeGainOnTrain().call();
+    const xpCostToRest = await tennisPlayer.methods.xpCostToRest().call();
+    const conditionGainOnRest = await tennisPlayer.methods.conditionGainOnRest().call();
+    dispatch(trainingDetailsLoaded(conditionCostToTrain, xpCostToTrain, attributeGain, xpCostToRest, conditionGainOnRest));
 }

@@ -43,3 +43,18 @@ export const newPlayerHeightSelector = createSelector(newPlayerHeight, a => a);
 //TRAINING
 const selectedTrainableAttributeName = state => get(state, 'training.attributeName', null);
 export const selectedTrainableAttributeNameSelector = createSelector(selectedTrainableAttributeName, a => a);
+
+const conditionCostToTrain = state => get(state, 'training.conditionCostToTrain', null);
+export const conditionCostToTrainSelector = createSelector(conditionCostToTrain, a => a);
+
+const xpCostToTrain = state => get(state, 'training.xpCostToTrain', null);
+export const xpCostToTrainSelector = createSelector(xpCostToTrain, a => a);
+
+const attributeGain = state => get(state, 'training.attributeGain', null);
+export const attributeGainSelector = createSelector(attributeGain, a => a);
+
+const xpCostToRest = state => get(state, 'training.xpCostToRest', null);
+export const xpCostToRestSelector = createSelector(xpCostToRest, a => a);
+
+const conditionGainOnRest = state => get(state, 'training.conditionGainOnRest', null);
+export const conditionGainOnRestSelector = createSelector(conditionGainOnRest, a => a);

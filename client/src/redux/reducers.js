@@ -45,6 +45,15 @@ function training(state = {}, action) {
     switch (action.type) {
         case 'TRAINABLE_ATTRIBUTE_SELECTED':
             return { ...state, attributeName: action.name, attributeId: action.id};
+        case 'TRAINING_DETAILS_LOADED':
+            return { 
+                ...state, 
+                conditionCostToTrain: action.conditionCostToTrain,
+                xpCostToTrain: action.xpCostToTrain,
+                attributeGain: action.attributeGain,
+                xpCostToRest: action.xpCostToRest,
+                conditionGainOnRest: action.conditionGainOnRest
+            }
         default:
             return state;
     }

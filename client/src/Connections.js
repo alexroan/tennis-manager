@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import { loadWeb3, loadGameContract, loadTennisPlayerContract, loadWalletDetails } from './redux/interactions';
+import { loadWeb3, loadGameContract, loadTennisPlayerContract, loadWalletDetails, loadTrainingCosts } from './redux/interactions';
 import { web3Selector, accountSelector, gameSelector, tennisPlayerSelector } from './redux/selectors';
 
 const preventDefaultIfNeeded = async (e) => {
@@ -21,7 +21,8 @@ class Connections extends Component {
         const connectGame = async (e) => {
             preventDefaultIfNeeded(e);
             const gameContract = await loadGameContract(dispatch, web3);
-            await loadTennisPlayerContract(dispatch, web3, gameContract);
+            const tennisPlayer = await loadTennisPlayerContract(dispatch, web3, gameContract);
+            await loadTrainingCosts(dispatch, tennisPlayer);
         }
 
         const connectWallet = async (e) => {
@@ -34,6 +35,7 @@ class Connections extends Component {
             const web3 = await loadWeb3(dispatch);
             const gameContract = await loadGameContract(dispatch, web3);
             const tennisPlayer = await loadTennisPlayerContract(dispatch, web3, gameContract);
+            await loadTrainingCosts(dispatch, tennisPlayer);
             await loadWalletDetails(dispatch, web3, tennisPlayer);
         }
 

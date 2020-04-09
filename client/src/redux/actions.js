@@ -72,3 +72,14 @@ export function trainableAttributeSelected(name, id){
         id
     }
 }
+
+export function trainingDetailsLoaded(conditionCostToTrain, xpCostToTrain, attributeGain, xpCostToRest, conditionGainOnRest){
+    return {
+        type: 'TRAINING_DETAILS_LOADED',
+        conditionCostToTrain,
+        xpCostToTrain,
+        attributeGain,
+        xpCostToRest,
+        conditionGainOnRest
+    }
+}
