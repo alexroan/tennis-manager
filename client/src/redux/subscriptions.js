@@ -1,4 +1,4 @@
-import { loadOwnedPlayers, loadWalletDetails } from "./interactions";
+import { loadOwnedPlayers, loadWalletDetails, unselectPlayer } from "./interactions";
 
 export const subscribeToEvents = async (dispatch, tennisPlayer, account, web3) => {
     tennisPlayer.events.Transfer({filter: {to: account}})
@@ -12,5 +12,6 @@ export const subscribeToEvents = async (dispatch, tennisPlayer, account, web3) =
 export const subscribeToAccountsChanging = async (dispatch, web3, tennisPlayer) => {
     window.ethereum.on('accountsChanged', function (accounts) {
         loadWalletDetails(dispatch, web3, tennisPlayer);
+        unselectPlayer(dispatch);
     });
 }

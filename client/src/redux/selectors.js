@@ -39,3 +39,7 @@ export const newPlayerAgeSelector = createSelector(newPlayerAge, a => a);
 
 const newPlayerHeight = state => get(state, 'newPlayer.height', null);
 export const newPlayerHeightSelector = createSelector(newPlayerHeight, a => a);
+
+//TRAINING
+const selectedTrainableAttributeName = state => get(state, 'training.attributeName', null);
+export const selectedTrainableAttributeNameSelector = createSelector(selectedTrainableAttributeName, a => a);

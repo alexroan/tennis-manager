@@ -18,9 +18,11 @@ function web3(state = {}, action) {
 function user(state = {}, action) {
     switch (action.type) {
         case 'OWNED_PLAYERS_LOADED':
-            return { ...state, ownedPlayers: action.ownedPlayers}
+            return { ...state, ownedPlayers: action.ownedPlayers};
         case 'PLAYER_DETAILS_SELECTED':
-            return { ...state, selectedPlayerDetails: action.player}
+            return { ...state, selectedPlayerDetails: action.player};
+        case 'CLEAR_SELECTED_PLAYER':
+            return { ...state, selectedPlayerDetails: false};
         default:
             return state;
     }
@@ -39,8 +41,17 @@ function newPlayer(state = {}, action) {
     }
 }
 
+function training(state = {}, action) {
+    switch (action.type) {
+        case 'TRAINABLE_ATTRIBUTE_SELECTED':
+            return { ...state, attributeName: action.name, attributeId: action.id};
+        default:
+            return state;
+    }
+}
+
 const rootReducer = new combineReducers({
-    web3, user, newPlayer
+    web3, user, newPlayer, training
 });
 
 export default rootReducer;

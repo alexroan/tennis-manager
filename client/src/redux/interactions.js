@@ -1,7 +1,7 @@
 import getWeb3 from "../getWeb3";
 import Game from "../contracts/Game.json";
 import TennisPlayer from "../contracts/TennisPlayer.json";
-import {web3Loaded, accountLoaded, gameLoaded, tennisPlayerLoaded, ownedPlayersLoaded, playerDetailsLoaded} from "./actions";
+import {web3Loaded, accountLoaded, gameLoaded, tennisPlayerLoaded, ownedPlayersLoaded, playerDetailsLoaded, clearSelectedPlayer, trainableAttributeSelected} from "./actions";
 import { subscribeToEvents, subscribeToAccountsChanging } from "./subscriptions";
 
 export const loadWeb3 = async (dispatch) => {
@@ -71,4 +71,12 @@ export const loadSelectedPlayer = async (dispatch, tennisPlayer, id) => {
     const player = await tennisPlayer.methods.players(id).call();
     dispatch(playerDetailsLoaded(player));
     return player;
+}
+
+export const unselectPlayer = async (dispatch) => {
+    dispatch(clearSelectedPlayer());
+}
+
+export const selectTrainableAttribute = (dispatch, name, id) => {
+    dispatch(trainableAttributeSelected(name, id));
 }

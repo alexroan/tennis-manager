@@ -58,3 +58,17 @@ export function playerDetailsLoaded(player){
         player
     }
 }
+
+export function clearSelectedPlayer(){
+    return {
+        type: 'CLEAR_SELECTED_PLAYER'
+    }
+}
+
+export function trainableAttributeSelected(name, id){
+    return {
+        type: 'TRAINABLE_ATTRIBUTE_SELECTED',
+        name,
+        id
+    }
+}
