@@ -4,7 +4,8 @@ import { tennisPlayerSelector, accountLoadedSelector, gameLoadedSelector, tennis
 import { newPlayerNameChange, newPlayerAgeChange, newPlayerHeightChange} from "./redux/actions";
 import { createNewPlayer, loadSelectedPlayer } from './redux/interactions';
 
-const playerSelected = (props, id) => {
+const playerSelected = (props, id, e) => {
+    e.preventDefault();
     console.log(id);
     const {dispatch, tennisPlayer} = props;
     loadSelectedPlayer(dispatch, tennisPlayer, id);
@@ -13,7 +14,7 @@ const playerSelected = (props, id) => {
 const getOwnedPlayers = (props) => {
     const {ownedPlayers} = props;
     return ownedPlayers.map((id) => 
-        <a href="#" onClick={() => {playerSelected(props, id)}} key={id} className="list-group-item">{id}</a>
+        <a href="/" onClick={(e) => {playerSelected(props, id, e)}} key={id} className="list-group-item">Player ID: {id}</a>
     );
 }
 
@@ -39,7 +40,7 @@ class PlayerList extends Component {
                         Player List
                     </div>
                     <div className="list-group list-group-flush">
-                        {this.props.showOwnedPlayers ? getOwnedPlayers(this.props) : <a className="list-group-item">No Players</a>}
+                        {this.props.showOwnedPlayers ? getOwnedPlayers(this.props) : <div className="list-group-item">No Players</div>}
                     </div>
                     <div className="card-body">
                         Create New Player
