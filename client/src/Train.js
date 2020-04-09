@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Dropdown} from 'react-bootstrap';
-import { selectTrainableAttribute, loadTrainingCosts } from './redux/interactions';
+import { selectTrainableAttribute, loadTrainingCosts, restPlayer } from './redux/interactions';
 import { selectedPlayerDetailsSelector, selectedPlayerIdSelector, selectedTrainableAttributeNameSelector, conditionCostToTrainSelector, xpCostToTrainSelector, xpCostToRestSelector, conditionGainOnRestSelector, attributeGainSelector, tennisPlayerSelector, tennisPlayerLoadedSelector, selectedTrainableAttributeIdSelector, accountSelector } from './redux/selectors';
 import getColourClass from './helpers';
 import {trainPlayer} from './redux/interactions';
@@ -36,6 +36,9 @@ const printAttributeGain = (attributeName, playerDetails, gain) => {
     else if (attributeName === "Technique") {
         current = playerDetails.agility;
     }
+    else if (attributeName === "Condition") {
+        current = playerDetails.condition;
+    }
     newValue = parseInt(current) + parseInt(gain);
     return (
         <li className="list-group-item d-flex justify-content-between align-items-center">
@@ -49,6 +52,10 @@ const printAttributeGain = (attributeName, playerDetails, gain) => {
 
 const trainThePlayer = (dispatch, tennisPlayer, playerId, attributeId, account) => {
     trainPlayer(dispatch, tennisPlayer, playerId, attributeId, account);
+}
+
+const restThePlayer = (dispatch, tennisPlayer, playerId, account) => {
+    restPlayer(dispatch, tennisPlayer, playerId, account);
 }
 
 class Train extends Component {
@@ -70,6 +77,8 @@ class Train extends Component {
             attributeGain,
             conditionCostToTrain,
             tennisPlayer,
+            xpCostToRest,
+            conditionGainOnRest,
             account
         } = this.props
         let isDisabled = playerDetails === false;
@@ -100,6 +109,20 @@ class Train extends Component {
                     <form onSubmit={() => trainThePlayer(dispatch, tennisPlayer, playerId, selectedTrainableAttributeId, account)}>
                         <div className="input-group input-group-sm mb-3">
                             <input type="submit" value="Train" className="form-control btn btn-primary btn-sm" aria-label="Train" aria-describedby="inputGroup-sizing-sm"></input>
+                        </div>
+                    </form>
+                </div>
+                <div className="card-header">
+                    Rest
+                </div>
+                <ul className="list-group">
+                    {printAttributeCost("XP", playerDetails.xp, xpCostToRest)}
+                    {printAttributeGain("Condition", playerDetails, conditionGainOnRest)}
+                </ul>
+                <div className="card-body">
+                    <form onSubmit={() => restThePlayer(dispatch, tennisPlayer, playerId, account)}>
+                        <div className="input-group input-group-sm mb-3">
+                            <input type="submit" value="Rest" className="form-control btn btn-primary btn-sm" aria-label="Rest" aria-describedby="inputGroup-sizing-sm"></input>
                         </div>
                     </form>
                 </div>

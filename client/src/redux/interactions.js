@@ -106,3 +106,19 @@ export const trainPlayer = async (dispatch, tennisPlayer, playerId, attributeId,
             console.log(error);
         });
 }
+
+export const restPlayer = async (dispatch, tennisPlayer, playerId, account) => {
+    tennisPlayer.methods.rest(playerId).send({from: account})
+        .once('transactionHash', (hash) => {
+            console.log("hash");
+        })
+        .once('receipt', (receipt) => {
+            console.log("receipt");
+        })
+        .on('confirmation', (confirmation) => {
+            console.log("confirmation");
+        })
+        .on('error', (error) => {
+            console.log(error);
+        });
+}

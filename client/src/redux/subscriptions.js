@@ -11,7 +11,13 @@ export const subscribeToTransferEvents = async (dispatch, tennisPlayer, account,
 
 export const subscribeToTrainingEvents = async (dispatch, tennisPlayer, playerId) => {
     tennisPlayer.events.Train({filter: {playerId: playerId}})
-        .on('data', async function(event) {
+        .once('data', async function(event) {
+            await loadSelectedPlayer(dispatch, tennisPlayer, playerId);
+        })
+        .on('error', console.error);
+        
+    tennisPlayer.events.Rest({filter: {playerId: playerId}})
+        .once('data', async function(event) {
             await loadSelectedPlayer(dispatch, tennisPlayer, playerId);
         })
         .on('error', console.error);
