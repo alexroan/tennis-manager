@@ -2,8 +2,9 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Dropdown} from 'react-bootstrap';
 import { selectTrainableAttribute, loadTrainingCosts } from './redux/interactions';
-import { selectedPlayerDetailsSelector, selectedTrainableAttributeNameSelector, conditionCostToTrainSelector, xpCostToTrainSelector, xpCostToRestSelector, conditionGainOnRestSelector, attributeGainSelector, tennisPlayerSelector, tennisPlayerLoadedSelector } from './redux/selectors';
+import { selectedPlayerDetailsSelector, selectedPlayerIdSelector, selectedTrainableAttributeNameSelector, conditionCostToTrainSelector, xpCostToTrainSelector, xpCostToRestSelector, conditionGainOnRestSelector, attributeGainSelector, tennisPlayerSelector, tennisPlayerLoadedSelector, selectedTrainableAttributeIdSelector, accountSelector } from './redux/selectors';
 import getColourClass from './helpers';
+import {trainPlayer} from './redux/interactions';
 
 const attributeSelected = (dispatch, name, id) => {
     selectTrainableAttribute(dispatch, name, id);
@@ -46,6 +47,10 @@ const printAttributeGain = (attributeName, playerDetails, gain) => {
     );
 }
 
+const trainThePlayer = (dispatch, tennisPlayer, playerId, attributeId, account) => {
+    trainPlayer(dispatch, tennisPlayer, playerId, attributeId, account);
+}
+
 class Train extends Component {
 
     componentDidMount() {
@@ -58,10 +63,14 @@ class Train extends Component {
     render() {
         const {dispatch, 
             playerDetails, 
+            playerId,
             selectedTrainableAttributeName,
+            selectedTrainableAttributeId,
             xpCostToTrain,
             attributeGain,
-            conditionCostToTrain
+            conditionCostToTrain,
+            tennisPlayer,
+            account
         } = this.props
         let isDisabled = playerDetails === false;
         return (
@@ -82,12 +91,17 @@ class Train extends Component {
                         </Dropdown.Menu>
                     </Dropdown>
                 </div>
-                <div className="card-body">
                 <ul className="list-group">
                     {printAttributeCost("XP", playerDetails.xp, xpCostToTrain)}
                     {printAttributeCost("Condition", playerDetails.condition, conditionCostToTrain)}
                     {printAttributeGain(selectedTrainableAttributeName, playerDetails, attributeGain)}
                 </ul>
+                <div className="card-body">
+                    <form onSubmit={() => trainThePlayer(dispatch, tennisPlayer, playerId, selectedTrainableAttributeId, account)}>
+                        <div className="input-group input-group-sm mb-3">
+                            <input type="submit" value="Train" className="form-control btn btn-primary btn-sm" aria-label="Train" aria-describedby="inputGroup-sizing-sm"></input>
+                        </div>
+                    </form>
                 </div>
             </div>
         )
@@ -96,10 +110,13 @@ class Train extends Component {
 
 function mapStateToProps(state){
 	return {
+        account: accountSelector(state),
         playerDetails: selectedPlayerDetailsSelector(state),
+        playerId: selectedPlayerIdSelector(state),
         tennisPlayerLoaded: tennisPlayerLoadedSelector(state),
         tennisPlayer: tennisPlayerSelector(state),
         selectedTrainableAttributeName: selectedTrainableAttributeNameSelector(state),
+        selectedTrainableAttributeId: selectedTrainableAttributeIdSelector(state),
         conditionCostToTrain: conditionCostToTrainSelector(state),
         xpCostToTrain: xpCostToTrainSelector(state),
         attributeGain: attributeGainSelector(state),

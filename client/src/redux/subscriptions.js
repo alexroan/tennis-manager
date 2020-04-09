@@ -1,10 +1,18 @@
-import { loadOwnedPlayers, loadWalletDetails, unselectPlayer } from "./interactions";
+import { loadOwnedPlayers, loadWalletDetails, unselectPlayer, loadSelectedPlayer } from "./interactions";
 
-export const subscribeToEvents = async (dispatch, tennisPlayer, account, web3) => {
+export const subscribeToTransferEvents = async (dispatch, tennisPlayer, account, web3) => {
+    let players;
     tennisPlayer.events.Transfer({filter: {to: account}})
         .on('data', async function(event){
-            console.log(dispatch, tennisPlayer, account);
-            await loadOwnedPlayers(dispatch, tennisPlayer, account);
+            players = await loadOwnedPlayers(dispatch, tennisPlayer, account);
+        })
+        .on('error', console.error);
+}
+
+export const subscribeToTrainingEvents = async (dispatch, tennisPlayer, playerId) => {
+    tennisPlayer.events.Train({filter: {playerId: playerId}})
+        .on('data', async function(event) {
+            await loadSelectedPlayer(dispatch, tennisPlayer, playerId);
         })
         .on('error', console.error);
 }

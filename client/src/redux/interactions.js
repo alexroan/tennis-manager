@@ -2,7 +2,7 @@ import getWeb3 from "../getWeb3";
 import Game from "../contracts/Game.json";
 import TennisPlayer from "../contracts/TennisPlayer.json";
 import {web3Loaded, accountLoaded, gameLoaded, tennisPlayerLoaded, ownedPlayersLoaded, playerDetailsLoaded, clearSelectedPlayer, trainableAttributeSelected, trainingDetailsLoaded} from "./actions";
-import { subscribeToEvents, subscribeToAccountsChanging } from "./subscriptions";
+import { subscribeToTransferEvents, subscribeToAccountsChanging, subscribeToTrainingEvents } from "./subscriptions";
 
 export const loadWeb3 = async (dispatch) => {
     const web3 = await getWeb3();
@@ -34,7 +34,7 @@ export const loadTennisPlayerContract = async (dispatch, web3, game) => {
 export const loadWalletDetails = async (dispatch, web3, tennisPlayer) => {
     const account = await loadWallet(dispatch, web3);
     await loadOwnedPlayers(dispatch, tennisPlayer, account);
-    subscribeToEvents(dispatch, tennisPlayer, account, web3);
+    subscribeToTransferEvents(dispatch, tennisPlayer, account, web3);
     subscribeToAccountsChanging(dispatch, web3, tennisPlayer);
 }
 
@@ -69,7 +69,8 @@ export const createNewPlayer = async (dispatch, game, account, name, age, height
 
 export const loadSelectedPlayer = async (dispatch, tennisPlayer, id) => {
     const player = await tennisPlayer.methods.players(id).call();
-    dispatch(playerDetailsLoaded(player));
+    dispatch(playerDetailsLoaded(player, id));
+    subscribeToTrainingEvents(dispatch, tennisPlayer, id);
     return player;
 }
 
@@ -88,4 +89,20 @@ export const loadTrainingCosts = async (dispatch, tennisPlayer) => {
     const xpCostToRest = await tennisPlayer.methods.xpCostToRest().call();
     const conditionGainOnRest = await tennisPlayer.methods.conditionGainOnRest().call();
     dispatch(trainingDetailsLoaded(conditionCostToTrain, xpCostToTrain, attributeGain, xpCostToRest, conditionGainOnRest));
+}
+
+export const trainPlayer = async (dispatch, tennisPlayer, playerId, attributeId, account) => {
+    tennisPlayer.methods.train(playerId, attributeId).send({from: account})
+        .once('transactionHash', (hash) => {
+            console.log("hash");
+        })
+        .once('receipt', (receipt) => {
+            console.log("receipt");
+        })
+        .on('confirmation', (confirmation) => {
+            console.log("confirmation");
+        })
+        .on('error', (error) => {
+            console.log(error);
+        });
 }

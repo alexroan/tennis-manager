@@ -20,9 +20,9 @@ function user(state = {}, action) {
         case 'OWNED_PLAYERS_LOADED':
             return { ...state, ownedPlayers: action.ownedPlayers};
         case 'PLAYER_DETAILS_SELECTED':
-            return { ...state, selectedPlayerDetails: action.player};
+            return { ...state, selectedPlayerDetails: action.player, selectedPlayerId: action.id};
         case 'CLEAR_SELECTED_PLAYER':
-            return { ...state, selectedPlayerDetails: false};
+            return { ...state, selectedPlayerDetails: false, selectedPlayerId: false};
         default:
             return state;
     }

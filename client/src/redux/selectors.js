@@ -27,6 +27,9 @@ export const tennisPlayerLoadedSelector = createSelector(tennisPlayerLoaded, a =
 const ownedPlayers = state => get(state, 'user.ownedPlayers', []);
 export const ownedPlayersSelector = createSelector(ownedPlayers, a => a);
 
+const selectedPlayerId = state => get(state, 'user.selectedPlayerId', false);
+export const selectedPlayerIdSelector = createSelector(selectedPlayerId, a => a);
+
 const selectedPlayerDetails = state => get(state, 'user.selectedPlayerDetails', false);
 export const selectedPlayerDetailsSelector = createSelector(selectedPlayerDetails, a => a);
 
@@ -43,6 +46,9 @@ export const newPlayerHeightSelector = createSelector(newPlayerHeight, a => a);
 //TRAINING
 const selectedTrainableAttributeName = state => get(state, 'training.attributeName', null);
 export const selectedTrainableAttributeNameSelector = createSelector(selectedTrainableAttributeName, a => a);
+
+const selectedTrainableAttributeId = state => get(state, 'training.attributeId', null);
+export const selectedTrainableAttributeIdSelector = createSelector(selectedTrainableAttributeId, a => a);
 
 const conditionCostToTrain = state => get(state, 'training.conditionCostToTrain', null);
 export const conditionCostToTrainSelector = createSelector(conditionCostToTrain, a => a);
