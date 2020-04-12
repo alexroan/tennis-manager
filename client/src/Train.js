@@ -50,11 +50,13 @@ const printAttributeGain = (attributeName, playerDetails, gain) => {
     );
 }
 
-const trainThePlayer = (dispatch, tennisPlayer, playerId, attributeId, account) => {
+const trainThePlayer = (dispatch, tennisPlayer, playerId, attributeId, account, e) => {
+    e.preventDefault();
     trainPlayer(dispatch, tennisPlayer, playerId, attributeId, account);
 }
 
-const restThePlayer = (dispatch, tennisPlayer, playerId, account) => {
+const restThePlayer = (dispatch, tennisPlayer, playerId, account, e) => {
+    e.preventDefault();
     restPlayer(dispatch, tennisPlayer, playerId, account);
 }
 
@@ -106,7 +108,7 @@ class Train extends Component {
                     {printAttributeGain(selectedTrainableAttributeName, playerDetails, attributeGain)}
                 </ul>
                 <div className="card-body">
-                    <form onSubmit={() => trainThePlayer(dispatch, tennisPlayer, playerId, selectedTrainableAttributeId, account)}>
+                    <form onSubmit={(e) => trainThePlayer(dispatch, tennisPlayer, playerId, selectedTrainableAttributeId, account, e)}>
                         <div className="input-group input-group-sm mb-3">
                             <input type="submit" value="Train" className="form-control btn btn-primary btn-sm" aria-label="Train" aria-describedby="inputGroup-sizing-sm"></input>
                         </div>
@@ -120,7 +122,7 @@ class Train extends Component {
                     {printAttributeGain("Condition", playerDetails, conditionGainOnRest)}
                 </ul>
                 <div className="card-body">
-                    <form onSubmit={() => restThePlayer(dispatch, tennisPlayer, playerId, account)}>
+                    <form onSubmit={(e) => restThePlayer(dispatch, tennisPlayer, playerId, account, e)}>
                         <div className="input-group input-group-sm mb-3">
                             <input type="submit" value="Rest" className="form-control btn btn-primary btn-sm" aria-label="Rest" aria-describedby="inputGroup-sizing-sm"></input>
                         </div>
