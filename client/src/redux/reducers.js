@@ -30,6 +30,8 @@ function user(state = {}, action) {
 
 function newPlayer(state = {}, action) {
     switch (action.type) {
+        case 'NEW_PLAYER_MODAL_SHOW':
+            return { ...state, showModal: action.showModal}
         case 'NEW_PLAYER_NAME_CHANGE':
             return { ...state, name: action.name}
         case 'NEW_PLAYER_AGE_CHANGE':

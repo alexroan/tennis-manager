@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import { tennisPlayerSelector, accountLoadedSelector, gameLoadedSelector, tennisPlayerLoadedSelector, accountSelector, ownedPlayersSelector, newPlayerNameSelector, newPlayerAgeSelector, newPlayerHeightSelector, gameSelector } from './redux/selectors';
-import { newPlayerNameChange, newPlayerAgeChange, newPlayerHeightChange} from "./redux/actions";
+import {Button, Modal} from 'react-bootstrap';
+import { tennisPlayerSelector, accountLoadedSelector, gameLoadedSelector, tennisPlayerLoadedSelector, accountSelector, ownedPlayersSelector, newPlayerNameSelector, newPlayerAgeSelector, newPlayerHeightSelector, gameSelector, showNewPlayerModalSelector } from './redux/selectors';
+import { newPlayerNameChange, newPlayerAgeChange, newPlayerHeightChange, newPlayerModalShow} from "./redux/actions";
 import { createNewPlayer, loadSelectedPlayer } from './redux/interactions';
 
 const playerSelected = (props, id, e) => {
@@ -21,29 +22,29 @@ const getOwnedPlayers = (props) => {
 class PlayerList extends Component {
     render() {
 
-        const {dispatch, game, account, newPlayerName, newPlayerAge, newPlayerHeight} = this.props;
+        const {dispatch, game, account, newPlayerName, newPlayerAge, newPlayerHeight, showModal} = this.props;
 
         const newPlayer = async (e) => {
             e.preventDefault();
             console.log(newPlayerName, newPlayerAge, newPlayerHeight);
             await createNewPlayer(dispatch, game, account, newPlayerName, newPlayerAge, newPlayerHeight);
+            closeModal();
         }
 
         const nameChange = (e) => dispatch(newPlayerNameChange(e.target.value));
         const ageChange = (e) => dispatch(newPlayerAgeChange(e.target.value));
         const heightChange = (e) => dispatch(newPlayerHeightChange(e.target.value));
 
+        const openModal = () => dispatch(newPlayerModalShow(true));
+        const closeModal = () => dispatch(newPlayerModalShow(false));
+
         return (
-            <div className="col-4">
-                <div className="card">
-                    <div className="card-header">
-                        Player List
-                    </div>
-                    <div className="list-group list-group-flush">
-                        {this.props.showOwnedPlayers ? getOwnedPlayers(this.props) : <div className="list-group-item">No Players</div>}
-                    </div>
-                    <div className="card-body">
-                        Create New Player
+            <>
+                <Modal show={showModal} onHide={closeModal}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Modal heading</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
                         <form onSubmit={newPlayer}>
                             <div className="input-group input-group-sm mb-3">
                                 <div className="input-group-prepend">
@@ -63,13 +64,33 @@ class PlayerList extends Component {
                                 </div>
                                 <input onChange={heightChange} required name="height" type="number" min="100" max="255" className="form-control" aria-label="Height" aria-describedby="inputGroup-sizing-sm"></input>
                             </div>
-                            <div className="input-group input-group-sm mb-3">
-                                <input type="submit" className="form-control btn btn-primary btn-sm" aria-label="Submit" aria-describedby="inputGroup-sizing-sm"></input>
-                            </div>
                         </form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={closeModal}>
+                            Close
+                        </Button>
+                        <Button variant="primary" onClick={newPlayer}>
+                            Create Player
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+                <div className="col-4">
+                    <div className="card">
+                        <div className="card-header">
+                            Player List
+                        </div>
+                        <div className="list-group list-group-flush">
+                            {this.props.showOwnedPlayers ? getOwnedPlayers(this.props) : <div className="list-group-item">No Players</div>}
+                        </div>
+                        <div className="card-body">
+                            <Button variant="primary" onClick={openModal}>
+                                Create New Player
+                            </Button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </>
         )
     }
 }
@@ -86,7 +107,8 @@ function mapStateToProps(state){
         ownedPlayers: ownedPlayersSelector(state),
         newPlayerName: newPlayerNameSelector(state),
         newPlayerAge: newPlayerAgeSelector(state),
-        newPlayerHeight: newPlayerHeightSelector(state)
+        newPlayerHeight: newPlayerHeightSelector(state),
+        showModal: showNewPlayerModalSelector(state)
 	}
 }
 

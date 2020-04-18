@@ -84,3 +84,10 @@ export function trainingDetailsLoaded(conditionCostToTrain, xpCostToTrain, attri
         conditionGainOnRest
     }
 }
+
+export function newPlayerModalShow(showModal){
+    return {
+        type: 'NEW_PLAYER_MODAL_SHOW',
+        showModal
+    }
+}

@@ -34,6 +34,9 @@ const selectedPlayerDetails = state => get(state, 'user.selectedPlayerDetails', 
 export const selectedPlayerDetailsSelector = createSelector(selectedPlayerDetails, a => a);
 
 // NEW PLAYER
+const showNewPlayerModal = state => get(state, 'newPlayer.showModal', false);
+export const showNewPlayerModalSelector = createSelector(showNewPlayerModal, a => a);
+
 const newPlayerName = state => get(state, 'newPlayer.name', null);
 export const newPlayerNameSelector = createSelector(newPlayerName, a => a);
 
