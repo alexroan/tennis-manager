@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Button, Modal} from 'react-bootstrap';
+import {Button, Modal, Nav} from 'react-bootstrap';
 import { tennisPlayerSelector, accountLoadedSelector, gameLoadedSelector, tennisPlayerLoadedSelector, accountSelector, ownedPlayersSelector, newPlayerNameSelector, newPlayerAgeSelector, newPlayerHeightSelector, gameSelector, showNewPlayerModalSelector } from './redux/selectors';
 import { newPlayerNameChange, newPlayerAgeChange, newPlayerHeightChange, newPlayerModalShow} from "./redux/actions";
 import { createNewPlayer, loadSelectedPlayer } from './redux/interactions';
@@ -15,7 +15,11 @@ const playerSelected = (props, id, e) => {
 const getOwnedPlayers = (props) => {
     const {ownedPlayers} = props;
     return ownedPlayers.map((id) => 
-        <a href="/" onClick={(e) => {playerSelected(props, id, e)}} key={id} className="list-group-item">Player ID: {id}</a>
+        <Nav.Item>
+            <Nav.Link onClick={(e) => {playerSelected(props, id, e)}} key={id}>
+                Player ID: {id}
+            </Nav.Link>
+        </Nav.Item>
     );
 }
 
@@ -75,20 +79,14 @@ class PlayerList extends Component {
                         </Button>
                     </Modal.Footer>
                 </Modal>
-                <div className="col-4">
-                    <div className="card">
-                        <div className="card-header">
-                            Player List
-                        </div>
-                        <div className="list-group list-group-flush">
-                            {this.props.showOwnedPlayers ? getOwnedPlayers(this.props) : <div className="list-group-item">No Players</div>}
-                        </div>
-                        <div className="card-body">
-                            <Button variant="primary" onClick={openModal}>
-                                Create New Player
-                            </Button>
-                        </div>
-                    </div>
+                <div className="col-3">
+                    <h4>Player List</h4>
+                    <Nav className="flex-column">
+                        {this.props.showOwnedPlayers ? getOwnedPlayers(this.props) : <></>}
+                    </Nav>
+                    <Button variant="primary" onClick={openModal}>
+                        Create New Player
+                    </Button>
                 </div>
             </>
         )
