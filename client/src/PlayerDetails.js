@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {Card} from 'react-bootstrap';
 import { selectedPlayerDetailsSelector } from './redux/selectors';
 import getColourClass from './helpers';
 
@@ -30,12 +31,12 @@ const getPlayerDetails = (props) => {
 class PlayerDetails extends Component {
     render() {
         return (
-            <div className="card">
-                <div className="card-header">
+            <Card>
+                <Card.Header>
                     Details
-                </div>
+                </Card.Header>
                 {this.props.playerDetails ? getPlayerDetails(this.props) : <p>No Details</p>}
-            </div>
+            </Card>
         );
     }
 }

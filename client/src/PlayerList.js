@@ -15,8 +15,8 @@ const playerSelected = (props, id, e) => {
 const getOwnedPlayers = (props) => {
     const {ownedPlayers} = props;
     return ownedPlayers.map((id) => 
-        <Nav.Item>
-            <Nav.Link onClick={(e) => {playerSelected(props, id, e)}} key={id}>
+        <Nav.Item key={id}>
+            <Nav.Link onClick={(e) => {playerSelected(props, id, e)}}>
                 Player ID: {id}
             </Nav.Link>
         </Nav.Item>
@@ -79,15 +79,14 @@ class PlayerList extends Component {
                         </Button>
                     </Modal.Footer>
                 </Modal>
-                <div className="col-3">
-                    <h4>Player List</h4>
-                    <Nav className="flex-column">
-                        {this.props.showOwnedPlayers ? getOwnedPlayers(this.props) : <></>}
-                    </Nav>
-                    <Button variant="primary" onClick={openModal}>
-                        Create New Player
-                    </Button>
-                </div>
+                
+                <h4>Player List</h4>
+                <Nav className="flex-column">
+                    {this.props.showOwnedPlayers ? getOwnedPlayers(this.props) : <></>}
+                </Nav>
+                <Button variant="primary" onClick={openModal}>
+                    Create New Player
+                </Button>
             </>
         )
     }

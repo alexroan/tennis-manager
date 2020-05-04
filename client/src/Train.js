@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Dropdown} from 'react-bootstrap';
+import {Dropdown, Row, Col, Card, ListGroup, ListGroupItem} from 'react-bootstrap';
 import { selectTrainableAttribute, loadTrainingCosts, restPlayer } from './redux/interactions';
 import { selectedPlayerDetailsSelector, selectedPlayerIdSelector, selectedTrainableAttributeNameSelector, conditionCostToTrainSelector, xpCostToTrainSelector, xpCostToRestSelector, conditionGainOnRestSelector, attributeGainSelector, tennisPlayerSelector, tennisPlayerLoadedSelector, selectedTrainableAttributeIdSelector, accountSelector } from './redux/selectors';
 import getColourClass from './helpers';
@@ -12,13 +12,16 @@ const attributeSelected = (dispatch, name, id) => {
 
 const printAttributeCost = (name, current, cost) => {
     let newValue = current - cost;
+    if (current === undefined) {
+        return "";
+    }
     return (
-        <li className="list-group-item d-flex justify-content-between align-items-center">
+        <ListGroupItem className="d-flex justify-content-between align-items-center">
             {name}
             <span className={getColourClass(current)}>{current}</span>
             >
             <span className={getColourClass(newValue)}>{newValue}</span>
-        </li>
+        </ListGroupItem>
     );
 }
 
@@ -40,13 +43,16 @@ const printAttributeGain = (attributeName, playerDetails, gain) => {
         current = playerDetails.condition;
     }
     newValue = parseInt(current) + parseInt(gain);
+    if (isNaN(newValue)) {
+        return "";
+    }
     return (
-        <li className="list-group-item d-flex justify-content-between align-items-center">
+        <ListGroupItem className="d-flex justify-content-between align-items-center">
             {attributeName}
             <span className={getColourClass(current)}>{current}</span>
             >
             <span className={getColourClass(newValue)}>{newValue}</span>
-        </li>
+        </ListGroupItem>
     );
 }
 
@@ -85,50 +91,58 @@ class Train extends Component {
         } = this.props
         let isDisabled = playerDetails === false;
         return (
-            <div className="card">
-                <div className="card-header">
-                    Trainer
-                </div>
-                <div className="card-body">
-                    <Dropdown>
-                        <Dropdown.Toggle disabled={isDisabled} size="sm">
-                            {selectedTrainableAttributeName == null ? "Attribute" : selectedTrainableAttributeName}
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                            <Dropdown.Item key={0} onClick={(e) => attributeSelected(dispatch, "Agility", 0)} >Agility</Dropdown.Item>
-                            <Dropdown.Item key={1} onClick={(e) => attributeSelected(dispatch, "Power", 1)} >Power</Dropdown.Item>
-                            <Dropdown.Item key={2} onClick={(e) => attributeSelected(dispatch, "Stamina", 2)} >Stamina</Dropdown.Item>
-                            <Dropdown.Item key={3} onClick={(e) => attributeSelected(dispatch, "Technique", 3)} >Technique</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
-                </div>
-                <ul className="list-group">
-                    {printAttributeCost("XP", playerDetails.xp, xpCostToTrain)}
-                    {printAttributeCost("Condition", playerDetails.condition, conditionCostToTrain)}
-                    {printAttributeGain(selectedTrainableAttributeName, playerDetails, attributeGain)}
-                </ul>
-                <div className="card-body">
-                    <form onSubmit={(e) => trainThePlayer(dispatch, tennisPlayer, playerId, selectedTrainableAttributeId, account, e)}>
-                        <div className="input-group input-group-sm mb-3">
-                            <input type="submit" value="Train" className="form-control btn btn-primary btn-sm" aria-label="Train" aria-describedby="inputGroup-sizing-sm"></input>
-                        </div>
-                    </form>
-                </div>
-                <div className="card-header">
-                    Rest
-                </div>
-                <ul className="list-group">
-                    {printAttributeCost("XP", playerDetails.xp, xpCostToRest)}
-                    {printAttributeGain("Condition", playerDetails, conditionGainOnRest)}
-                </ul>
-                <div className="card-body">
-                    <form onSubmit={(e) => restThePlayer(dispatch, tennisPlayer, playerId, account, e)}>
-                        <div className="input-group input-group-sm mb-3">
-                            <input type="submit" value="Rest" className="form-control btn btn-primary btn-sm" aria-label="Rest" aria-describedby="inputGroup-sizing-sm"></input>
-                        </div>
-                    </form>
-                </div>
-            </div>
+            <Row>
+                <Col md="6">
+                    <Card>
+                        <Card.Header>
+                            Trainer
+                        </Card.Header>
+                        <Card.Body>
+                            <Dropdown>
+                                <Dropdown.Toggle disabled={isDisabled} size="sm">
+                                    {selectedTrainableAttributeName == null ? "Attribute" : selectedTrainableAttributeName}
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                    <Dropdown.Item key={0} onClick={(e) => attributeSelected(dispatch, "Agility", 0)} >Agility</Dropdown.Item>
+                                    <Dropdown.Item key={1} onClick={(e) => attributeSelected(dispatch, "Power", 1)} >Power</Dropdown.Item>
+                                    <Dropdown.Item key={2} onClick={(e) => attributeSelected(dispatch, "Stamina", 2)} >Stamina</Dropdown.Item>
+                                    <Dropdown.Item key={3} onClick={(e) => attributeSelected(dispatch, "Technique", 3)} >Technique</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </Card.Body>
+                        <ListGroup>
+                            {printAttributeCost("XP", playerDetails.xp, xpCostToTrain)}
+                            {printAttributeCost("Condition", playerDetails.condition, conditionCostToTrain)}
+                            {printAttributeGain(selectedTrainableAttributeName, playerDetails, attributeGain)}
+                        </ListGroup>
+                        <Card.Body>
+                            <form onSubmit={(e) => trainThePlayer(dispatch, tennisPlayer, playerId, selectedTrainableAttributeId, account, e)}>
+                                <div className="input-group input-group-sm mb-3">
+                                    <input type="submit" value="Train" className="form-control btn btn-primary btn-sm" aria-label="Train" aria-describedby="inputGroup-sizing-sm"></input>
+                                </div>
+                            </form>
+                        </Card.Body>
+                    </Card>
+                </Col>
+                <Col md="6">
+                    <Card>
+                        <Card.Header>
+                            Rest
+                        </Card.Header>
+                        <ListGroup>
+                            {printAttributeCost("XP", playerDetails.xp, xpCostToRest)}
+                            {printAttributeGain("Condition", playerDetails, conditionGainOnRest)}
+                        </ListGroup>
+                        <Card.Body>
+                            <form onSubmit={(e) => restThePlayer(dispatch, tennisPlayer, playerId, account, e)}>
+                                <div className="input-group input-group-sm mb-3">
+                                    <input type="submit" value="Rest" className="form-control btn btn-primary btn-sm" aria-label="Rest" aria-describedby="inputGroup-sizing-sm"></input>
+                                </div>
+                            </form>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
         )
     }
 }
