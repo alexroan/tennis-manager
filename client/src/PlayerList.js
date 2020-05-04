@@ -26,12 +26,12 @@ const getOwnedPlayers = (props) => {
 class PlayerList extends Component {
     render() {
 
-        const {dispatch, game, account, newPlayerName, newPlayerAge, newPlayerHeight, showModal} = this.props;
+        const {dispatch, game, account, newPlayerName, newPlayerAge, newPlayerHeight, showModal, tennisPlayer} = this.props;
 
         const newPlayer = async (e) => {
             e.preventDefault();
             console.log(newPlayerName, newPlayerAge, newPlayerHeight);
-            await createNewPlayer(dispatch, game, account, newPlayerName, newPlayerAge, newPlayerHeight);
+            await createNewPlayer(dispatch, game, account, newPlayerName, newPlayerAge, newPlayerHeight, tennisPlayer);
             closeModal();
         }
 

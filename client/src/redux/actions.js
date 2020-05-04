@@ -85,6 +85,30 @@ export function trainingDetailsLoaded(conditionCostToTrain, xpCostToTrain, attri
     }
 }
 
+export function playerIsTraining(){
+    return {
+        type: 'PLAYER_TRAINING'
+    }
+}
+
+export function playerFinishedTraining(){
+    return {
+        type: 'PLAYER_FINISHED_TRAINING'
+    }
+}
+
+export function playerIsResting(){
+    return {
+        type: 'PLAYER_RESTING'
+    }
+}
+
+export function playerFinishedResting(){
+    return {
+        type: 'PLAYER_FINISHED_RESTING'
+    }
+}
+
 export function newPlayerModalShow(showModal){
     return {
         type: 'NEW_PLAYER_MODAL_SHOW',

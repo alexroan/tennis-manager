@@ -45,6 +45,14 @@ function newPlayer(state = {}, action) {
 
 function training(state = {}, action) {
     switch (action.type) {
+        case 'PLAYER_TRAINING':
+            return { ...state, isTraining: true }
+        case 'PLAYER_FINISHED_TRAINING':
+            return { ...state, isTraining: false }
+        case 'PLAYER_RESTING':
+            return { ...state, isResting: true }
+        case 'PLAYER_FINISHED_RESTING':
+            return { ...state, isResting: false }
         case 'TRAINABLE_ATTRIBUTE_SELECTED':
             return { ...state, attributeName: action.name, attributeId: action.id};
         case 'TRAINING_DETAILS_LOADED':

@@ -1,7 +1,7 @@
 import getWeb3 from "../getWeb3";
 import Game from "../contracts/Game.json";
 import TennisPlayer from "../contracts/TennisPlayer.json";
-import {web3Loaded, accountLoaded, gameLoaded, tennisPlayerLoaded, ownedPlayersLoaded, playerDetailsLoaded, clearSelectedPlayer, trainableAttributeSelected, trainingDetailsLoaded} from "./actions";
+import {web3Loaded, accountLoaded, gameLoaded, tennisPlayerLoaded, ownedPlayersLoaded, playerDetailsLoaded, clearSelectedPlayer, trainableAttributeSelected, trainingDetailsLoaded, playerIsTraining, playerFinishedTraining, playerIsResting, playerFinishedResting} from "./actions";
 import { subscribeToTransferEvents, subscribeToAccountsChanging, subscribeToTrainingEvents } from "./subscriptions";
 
 export const loadWeb3 = async (dispatch) => {
@@ -51,7 +51,7 @@ export const loadOwnedPlayers = async (dispatch, tennisPlayer, account) => {
     return ownedTokens;
 }
 
-export const createNewPlayer = async (dispatch, game, account, name, age, height) => {
+export const createNewPlayer = async (dispatch, game, account, name, age, height, tennisPlayer) => {
     game.methods.newPlayer(name, age, height).send({from: account})
         .once('transactionHash', (hash) => {
             console.log("hash");
@@ -59,8 +59,11 @@ export const createNewPlayer = async (dispatch, game, account, name, age, height
         .once('receipt', (receipt) => {
             console.log("receipt");
         })
-        .on('confirmation', (confirmation) => {
-            console.log("confirmation");
+        .on('confirmation', async (confirmation, receipt) => {
+            console.log("confirmation number:", confirmation);
+            if(confirmation == 4) {
+                await loadOwnedPlayers(dispatch, tennisPlayer, account);
+            }
         })
         .on('error', (error) => {
             console.log(error);
@@ -94,13 +97,14 @@ export const loadTrainingCosts = async (dispatch, tennisPlayer) => {
 export const trainPlayer = async (dispatch, tennisPlayer, playerId, attributeId, account) => {
     tennisPlayer.methods.train(playerId, attributeId).send({from: account})
         .once('transactionHash', (hash) => {
-            console.log("hash");
+            dispatch(playerIsTraining());
         })
-        .once('receipt', (receipt) => {
-            console.log("receipt");
-        })
-        .on('confirmation', (confirmation) => {
-            console.log("confirmation");
+        .on('confirmation', async (confirmation, receipt) => {
+            console.log("confirmation number:", confirmation);
+            if(confirmation == 4) {
+                await loadSelectedPlayer(dispatch, tennisPlayer, playerId);
+                dispatch(playerFinishedTraining());
+            }
         })
         .on('error', (error) => {
             console.log(error);
@@ -110,13 +114,14 @@ export const trainPlayer = async (dispatch, tennisPlayer, playerId, attributeId,
 export const restPlayer = async (dispatch, tennisPlayer, playerId, account) => {
     tennisPlayer.methods.rest(playerId).send({from: account})
         .once('transactionHash', (hash) => {
-            console.log("hash");
+            dispatch(playerIsResting());
         })
-        .once('receipt', (receipt) => {
-            console.log("receipt");
-        })
-        .on('confirmation', (confirmation) => {
-            console.log("confirmation");
+        .on('confirmation', async (confirmation, receipt) => {
+            console.log("confirmation number:", confirmation);
+            if(confirmation == 4) {
+                await loadSelectedPlayer(dispatch, tennisPlayer, playerId);
+                dispatch(playerFinishedResting());
+            }
         })
         .on('error', (error) => {
             console.log(error);

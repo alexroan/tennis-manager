@@ -67,3 +67,9 @@ export const xpCostToRestSelector = createSelector(xpCostToRest, a => a);
 
 const conditionGainOnRest = state => get(state, 'training.conditionGainOnRest', null);
 export const conditionGainOnRestSelector = createSelector(conditionGainOnRest, a => a);
+
+const isTraining = state => get(state, 'training.isTraining', null);
+export const isTrainingSelector = createSelector(isTraining, a => a);
+
+const isResting = state => get(state, 'training.isResting', null);
+export const isRestingSelector = createSelector(isResting, a => a);

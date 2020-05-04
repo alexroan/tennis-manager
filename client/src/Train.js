@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Dropdown, Row, Col, Card, ListGroup, ListGroupItem} from 'react-bootstrap';
+import {Dropdown, Row, Col, Card, ListGroup, ListGroupItem, Button, Spinner} from 'react-bootstrap';
 import { selectTrainableAttribute, loadTrainingCosts, restPlayer } from './redux/interactions';
-import { selectedPlayerDetailsSelector, selectedPlayerIdSelector, selectedTrainableAttributeNameSelector, conditionCostToTrainSelector, xpCostToTrainSelector, xpCostToRestSelector, conditionGainOnRestSelector, attributeGainSelector, tennisPlayerSelector, tennisPlayerLoadedSelector, selectedTrainableAttributeIdSelector, accountSelector } from './redux/selectors';
+import { selectedPlayerDetailsSelector, selectedPlayerIdSelector, selectedTrainableAttributeNameSelector, conditionCostToTrainSelector, xpCostToTrainSelector, xpCostToRestSelector, conditionGainOnRestSelector, attributeGainSelector, tennisPlayerSelector, tennisPlayerLoadedSelector, selectedTrainableAttributeIdSelector, accountSelector, isTrainingSelector, isRestingSelector } from './redux/selectors';
 import getColourClass from './helpers';
 import {trainPlayer} from './redux/interactions';
 
@@ -34,10 +34,10 @@ const printAttributeGain = (attributeName, playerDetails, gain) => {
         current = playerDetails.power;
     }
     else if (attributeName === "Stamina") {
-        current = playerDetails.agility;
+        current = playerDetails.stamina;
     }
     else if (attributeName === "Technique") {
-        current = playerDetails.agility;
+        current = playerDetails.technique;
     }
     else if (attributeName === "Condition") {
         current = playerDetails.condition;
@@ -87,7 +87,9 @@ class Train extends Component {
             tennisPlayer,
             xpCostToRest,
             conditionGainOnRest,
-            account
+            account,
+            isTraining,
+            isResting
         } = this.props
         let isDisabled = playerDetails === false;
         return (
@@ -118,7 +120,9 @@ class Train extends Component {
                         <Card.Body>
                             <form onSubmit={(e) => trainThePlayer(dispatch, tennisPlayer, playerId, selectedTrainableAttributeId, account, e)}>
                                 <div className="input-group input-group-sm mb-3">
-                                    <input type="submit" value="Train" className="form-control btn btn-primary btn-sm" aria-label="Train" aria-describedby="inputGroup-sizing-sm"></input>
+                                    <Button className="form-control" type="submit">
+                                        {isTraining ? <><Spinner as="span" animation="grow" size="sm" role="status" aria-hidden="true" />Training...</> : <>Train</>}
+                                    </Button>
                                 </div>
                             </form>
                         </Card.Body>
@@ -136,7 +140,9 @@ class Train extends Component {
                         <Card.Body>
                             <form onSubmit={(e) => restThePlayer(dispatch, tennisPlayer, playerId, account, e)}>
                                 <div className="input-group input-group-sm mb-3">
-                                    <input type="submit" value="Rest" className="form-control btn btn-primary btn-sm" aria-label="Rest" aria-describedby="inputGroup-sizing-sm"></input>
+                                    <Button className="form-control" type="submit">
+                                        {isResting ? <><Spinner as="span" animation="grow" size="sm" role="status" aria-hidden="true" />Resting...</> : <>Rest</>}
+                                    </Button>
                                 </div>
                             </form>
                         </Card.Body>
@@ -160,7 +166,9 @@ function mapStateToProps(state){
         xpCostToTrain: xpCostToTrainSelector(state),
         attributeGain: attributeGainSelector(state),
         xpCostToRest: xpCostToRestSelector(state),
-        conditionGainOnRest: conditionGainOnRestSelector(state)
+        conditionGainOnRest: conditionGainOnRestSelector(state),
+        isTraining: isTrainingSelector(state),
+        isResting: isRestingSelector(state)
 	}
 }
 

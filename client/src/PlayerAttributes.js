@@ -6,6 +6,7 @@ import getColourClass from './helpers';
 
 const getPlayerAttributes = (props) => {
     const {playerDetails} = props;
+    console.log(playerDetails);
     return (
         <ul className="list-group">
             <li className="list-group-item d-flex justify-content-between align-items-center">
