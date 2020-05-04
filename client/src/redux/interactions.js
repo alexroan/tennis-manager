@@ -1,13 +1,19 @@
-import getWeb3 from "../getWeb3";
+import {getWeb3, getWeb3Socket} from "../getWeb3";
 import Game from "../contracts/Game.json";
 import TennisPlayer from "../contracts/TennisPlayer.json";
-import {web3Loaded, accountLoaded, gameLoaded, tennisPlayerLoaded, ownedPlayersLoaded, playerDetailsLoaded, clearSelectedPlayer, trainableAttributeSelected, trainingDetailsLoaded, playerIsTraining, playerFinishedTraining, playerIsResting, playerFinishedResting} from "./actions";
+import {web3Loaded, accountLoaded, gameLoaded, tennisPlayerLoaded, ownedPlayersLoaded, playerDetailsLoaded, clearSelectedPlayer, trainableAttributeSelected, trainingDetailsLoaded, playerIsTraining, playerFinishedTraining, playerIsResting, playerFinishedResting, web3SocketLoaded, tennisPlayerSocketLoaded} from "./actions";
 import { subscribeToTransferEvents, subscribeToAccountsChanging, subscribeToTrainingEvents } from "./subscriptions";
 
 export const loadWeb3 = async (dispatch) => {
     const web3 = await getWeb3();
     dispatch(web3Loaded(web3));
     return web3;
+}
+
+export const loadWeb3Socket = async (dispatch, web3) => {
+    const web3Socket = await getWeb3Socket(web3);
+    dispatch(web3SocketLoaded(web3Socket));
+    return web3Socket;
 }
 
 export const loadGameContract = async (dispatch, web3) => {
@@ -23,24 +29,29 @@ export const loadGameContract = async (dispatch, web3) => {
 
 export const loadTennisPlayerContract = async (dispatch, web3, game) => {
     const address = await game.methods.playerTokenAddress().call();
-    const instance = new web3.eth.Contract(
-        TennisPlayer.abi,
-        address,
-    );
+    const instance = new web3.eth.Contract(TennisPlayer.abi, address);
     dispatch(tennisPlayerLoaded(instance));
     return instance;
 }
 
-export const loadWalletDetails = async (dispatch, web3, tennisPlayer) => {
+export const loadTennisPlayerSocket = async (dispatch, web3Socket, game) => {
+    const address = await game.methods.playerTokenAddress().call();
+    const socketInstance = new web3Socket.eth.Contract(TennisPlayer.abi, address);
+    dispatch(tennisPlayerSocketLoaded(socketInstance));
+    return socketInstance;
+}
+
+export const loadWalletDetails = async (dispatch, web3, web3Socket, tennisPlayer, tennisPlayerSocket) => {
     const account = await loadWallet(dispatch, web3);
     await loadOwnedPlayers(dispatch, tennisPlayer, account);
-    subscribeToTransferEvents(dispatch, tennisPlayer, account, web3);
-    subscribeToAccountsChanging(dispatch, web3, tennisPlayer);
+    subscribeToTransferEvents(dispatch, tennisPlayer, tennisPlayerSocket, account);
+    subscribeToAccountsChanging(dispatch, web3, web3Socket, tennisPlayer);
 }
 
 export const loadWallet = async (dispatch, web3) => {
     const accounts = await web3.eth.getAccounts();
     const account = accounts[0];
+    console.log("accounts:", accounts);
     dispatch(accountLoaded(account));
     return account;
 }
@@ -56,24 +67,15 @@ export const createNewPlayer = async (dispatch, game, account, name, age, height
         .once('transactionHash', (hash) => {
             console.log("hash");
         })
-        .once('receipt', (receipt) => {
-            console.log("receipt");
-        })
-        .on('confirmation', async (confirmation, receipt) => {
-            console.log("confirmation number:", confirmation);
-            if(confirmation == 4) {
-                await loadOwnedPlayers(dispatch, tennisPlayer, account);
-            }
-        })
         .on('error', (error) => {
             console.log(error);
         });
 }
 
-export const loadSelectedPlayer = async (dispatch, tennisPlayer, id) => {
+export const loadSelectedPlayer = async (dispatch, tennisPlayer, tennisPlayerSocket, id) => {
     const player = await tennisPlayer.methods.players(id).call();
     dispatch(playerDetailsLoaded(player, id));
-    subscribeToTrainingEvents(dispatch, tennisPlayer, id);
+    subscribeToTrainingEvents(dispatch, tennisPlayer, tennisPlayerSocket, id);
     return player;
 }
 
@@ -99,13 +101,6 @@ export const trainPlayer = async (dispatch, tennisPlayer, playerId, attributeId,
         .once('transactionHash', (hash) => {
             dispatch(playerIsTraining());
         })
-        .on('confirmation', async (confirmation, receipt) => {
-            console.log("confirmation number:", confirmation);
-            if(confirmation == 4) {
-                await loadSelectedPlayer(dispatch, tennisPlayer, playerId);
-                dispatch(playerFinishedTraining());
-            }
-        })
         .on('error', (error) => {
             console.log(error);
         });
@@ -115,13 +110,6 @@ export const restPlayer = async (dispatch, tennisPlayer, playerId, account) => {
     tennisPlayer.methods.rest(playerId).send({from: account})
         .once('transactionHash', (hash) => {
             dispatch(playerIsResting());
-        })
-        .on('confirmation', async (confirmation, receipt) => {
-            console.log("confirmation number:", confirmation);
-            if(confirmation == 4) {
-                await loadSelectedPlayer(dispatch, tennisPlayer, playerId);
-                dispatch(playerFinishedResting());
-            }
         })
         .on('error', (error) => {
             console.log(error);

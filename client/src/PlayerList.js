@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Button, Modal, Nav} from 'react-bootstrap';
-import { tennisPlayerSelector, accountLoadedSelector, gameLoadedSelector, tennisPlayerLoadedSelector, accountSelector, ownedPlayersSelector, newPlayerNameSelector, newPlayerAgeSelector, newPlayerHeightSelector, gameSelector, showNewPlayerModalSelector } from './redux/selectors';
+import { tennisPlayerSelector, accountLoadedSelector, gameLoadedSelector, tennisPlayerLoadedSelector, accountSelector, ownedPlayersSelector, newPlayerNameSelector, newPlayerAgeSelector, newPlayerHeightSelector, gameSelector, showNewPlayerModalSelector, tennisPlayerSocketSelector } from './redux/selectors';
 import { newPlayerNameChange, newPlayerAgeChange, newPlayerHeightChange, newPlayerModalShow} from "./redux/actions";
 import { createNewPlayer, loadSelectedPlayer } from './redux/interactions';
 
 const playerSelected = (props, id, e) => {
     e.preventDefault();
     console.log(id);
-    const {dispatch, tennisPlayer} = props;
-    loadSelectedPlayer(dispatch, tennisPlayer, id);
+    const {dispatch, tennisPlayer, tennisPlayerSocket} = props;
+    loadSelectedPlayer(dispatch, tennisPlayer, tennisPlayerSocket, id);
 }
 
 const getOwnedPlayers = (props) => {
@@ -100,6 +100,7 @@ function mapStateToProps(state){
         showOwnedPlayers: accountLoaded && gameLoaded && tennisPlayerLoaded,
         game: gameSelector(state),
         tennisPlayer: tennisPlayerSelector(state),
+        tennisPlayerSocket: tennisPlayerSocketSelector(state),
         account: accountSelector(state),
         ownedPlayers: ownedPlayersSelector(state),
         newPlayerName: newPlayerNameSelector(state),

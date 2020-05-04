@@ -5,6 +5,13 @@ export function web3Loaded(connection){
     }
 }
 
+export function web3SocketLoaded(socket){
+    return {
+        type: 'WEB3_SOCKET_LOADED',
+        socket
+    }
+}
+
 export function accountLoaded(account){
     return {
         type: 'ACCOUNT_LOADED',
@@ -23,6 +30,13 @@ export function tennisPlayerLoaded(tennisPlayer){
     return {
         type: 'TENNIS_PLAYER_LOADED',
         tennisPlayer
+    }
+}
+
+export function tennisPlayerSocketLoaded(tennisPlayerSocket){
+    return {
+        type: 'TENNIS_PLAYER_SOCKET_LOADED',
+        tennisPlayerSocket
     }
 }
 

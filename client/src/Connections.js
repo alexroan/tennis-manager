@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import { loadWeb3, loadGameContract, loadTennisPlayerContract, loadWalletDetails, loadTrainingCosts } from './redux/interactions';
-import { web3Selector, accountSelector, gameSelector, tennisPlayerSelector } from './redux/selectors';
+import { loadWeb3, loadGameContract, loadTennisPlayerContract, loadWalletDetails, loadTrainingCosts, loadWeb3Socket, loadTennisPlayerSocket } from './redux/interactions';
+import { web3Selector, accountSelector, gameSelector, tennisPlayerSelector, web3SocketSelector, tennisPlayerSocketSelector } from './redux/selectors';
 
 const preventDefaultIfNeeded = async (e) => {
     if (!e.defaultPrevented) {
@@ -11,32 +11,36 @@ const preventDefaultIfNeeded = async (e) => {
 
 class Connections extends Component {
     render() {
-        const {dispatch, web3, account, game, tennisPlayer} = this.props;
+        const {dispatch, web3, web3Socket, account, game, tennisPlayer, tennisPlayerSocket} = this.props;
 
         const connectBlockchain = async (e) => {
             preventDefaultIfNeeded(e);
-            await loadWeb3(dispatch);
+            const web3 = await loadWeb3(dispatch);
+            await loadWeb3Socket(dispatch, web3);
         }
         
         const connectGame = async (e) => {
             preventDefaultIfNeeded(e);
             const gameContract = await loadGameContract(dispatch, web3);
             const tennisPlayer = await loadTennisPlayerContract(dispatch, web3, gameContract);
+            const tennisPlayerSocket = await loadTennisPlayerSocket(dispatch, web3Socket, gameContract);
             await loadTrainingCosts(dispatch, tennisPlayer);
         }
 
         const connectWallet = async (e) => {
             preventDefaultIfNeeded(e);
-            await loadWalletDetails(dispatch, web3, tennisPlayer);
+            await loadWalletDetails(dispatch, web3, web3Socket, tennisPlayer, tennisPlayerSocket);
         }
 
         const connectAll = async (e) => {
             e.preventDefault();
             const web3 = await loadWeb3(dispatch);
+            const web3Socket = await loadWeb3Socket(dispatch, web3);
             const gameContract = await loadGameContract(dispatch, web3);
             const tennisPlayer = await loadTennisPlayerContract(dispatch, web3, gameContract);
+            const tennisPlayerSocket = await loadTennisPlayerSocket(dispatch, web3Socket, gameContract);
             await loadTrainingCosts(dispatch, tennisPlayer);
-            await loadWalletDetails(dispatch, web3, tennisPlayer);
+            await loadWalletDetails(dispatch, web3, web3Socket, tennisPlayer, tennisPlayerSocket);
         }
 
         return (
@@ -97,9 +101,11 @@ class Connections extends Component {
 function mapStateToProps(state){
 	return {
         web3: web3Selector(state),
+        web3Socket: web3SocketSelector(state),
         account: accountSelector(state),
         game: gameSelector(state),
-        tennisPlayer: tennisPlayerSelector(state)
+        tennisPlayer: tennisPlayerSelector(state),
+        tennisPlayerSocket: tennisPlayerSocketSelector(state)
 	}
 }
 

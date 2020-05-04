@@ -4,12 +4,16 @@ function web3(state = {}, action) {
     switch (action.type) {
         case 'WEB3_LOADED':
             return { ...state, connection: action.connection };
+        case 'WEB3_SOCKET_LOADED':
+            return { ...state, socket: action.socket};
         case 'ACCOUNT_LOADED':
             return { ...state, account: action.account, accountLoaded: true};
         case 'GAME_LOADED':
             return { ...state, game: action.game, gameLoaded: true };
         case 'TENNIS_PLAYER_LOADED':
             return { ...state, tennisPlayer: action.tennisPlayer, tennisPlayerLoaded: true };
+        case 'TENNIS_PLAYER_SOCKET_LOADED':
+            return { ...state, tennisPlayerSocket: action.tennisPlayerSocket, tennisPlayerSocketLoaded: true };
         default:
             return state;
     }

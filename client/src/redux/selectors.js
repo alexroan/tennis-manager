@@ -5,6 +5,9 @@ import {createSelector} from 'reselect';
 const web3 = state => get(state, 'web3.connection', null);
 export const web3Selector = createSelector(web3, w => w);
 
+const web3Socket = state => get(state, 'web3.socket', null);
+export const web3SocketSelector = createSelector(web3Socket, w => w);
+
 const account = state => get(state, 'web3.account', null);
 export const accountSelector = createSelector(account, a => a);
 
@@ -22,6 +25,9 @@ export const tennisPlayerSelector = createSelector(tennisPlayer, a => a);
 
 const tennisPlayerLoaded = state => get(state, 'web3.tennisPlayerLoaded', false);
 export const tennisPlayerLoadedSelector = createSelector(tennisPlayerLoaded, a => a);
+
+const tennisPlayerSocket = state => get(state, 'web3.tennisPlayerSocket', null);
+export const tennisPlayerSocketSelector = createSelector(tennisPlayerSocket, a => a);
 
 // USER
 const ownedPlayers = state => get(state, 'user.ownedPlayers', []);
