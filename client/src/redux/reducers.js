@@ -32,8 +32,23 @@ function user(state = {}, action) {
     }
 }
 
+function competing(state = {}, action) {
+    switch (action.type) {
+        case 'IS_PLAYER_ENLISTED':
+            return { ...state, enlistingChanging: false, isEnlisted: action.value }
+        case 'PLAYER_CHANGING_ENLISTING':
+            return { ...state, enlistingChanging: true }
+        default:
+            return state;
+    }
+}
+
 function newPlayer(state = {}, action) {
     switch (action.type) {
+        case 'CREATING_PLAYER':
+            return { ...state, creatingPlayer: true }
+        case 'PLAYER_CREATED':
+            return { ...state, creatingPlayer: false }
         case 'NEW_PLAYER_MODAL_SHOW':
             return { ...state, showModal: action.showModal}
         case 'NEW_PLAYER_NAME_CHANGE':
@@ -74,7 +89,7 @@ function training(state = {}, action) {
 }
 
 const rootReducer = new combineReducers({
-    web3, user, newPlayer, training
+    web3, user, newPlayer, training, competing
 });
 
 export default rootReducer;

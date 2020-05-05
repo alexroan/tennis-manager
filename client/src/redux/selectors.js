@@ -40,6 +40,9 @@ const selectedPlayerDetails = state => get(state, 'user.selectedPlayerDetails', 
 export const selectedPlayerDetailsSelector = createSelector(selectedPlayerDetails, a => a);
 
 // NEW PLAYER
+const creatingPlayer = state => get(state, 'newPlayer.creatingPlayer', false);
+export const creatingPlayerSelector = createSelector(creatingPlayer, a => a);
+
 const showNewPlayerModal = state => get(state, 'newPlayer.showModal', false);
 export const showNewPlayerModalSelector = createSelector(showNewPlayerModal, a => a);
 
@@ -79,3 +82,7 @@ export const isTrainingSelector = createSelector(isTraining, a => a);
 
 const isResting = state => get(state, 'training.isResting', null);
 export const isRestingSelector = createSelector(isResting, a => a);
+
+//COMPETING
+const isEnlisted = state => get(state, 'competing.isEnlisted', false);
+export const isEnlistedSelector = createSelector(isEnlisted, a => a);

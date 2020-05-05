@@ -7,7 +7,6 @@ export const getWeb3Socket = (web3) => new Promise( async (resolve, reject) => {
 		if(networkName === "kovan"){
 			web3Socket = new Web3(new Web3.providers.WebsocketProvider(process.env.REACT_APP_WSS_ENDPOINT));
 		}
-		console.log(web3Socket);
 		resolve(web3Socket);
 	}
 	catch(error) {

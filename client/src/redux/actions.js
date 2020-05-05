@@ -99,6 +99,18 @@ export function trainingDetailsLoaded(conditionCostToTrain, xpCostToTrain, attri
     }
 }
 
+export function creatingPlayer(){
+    return {
+        type: 'CREATING_PLAYER'
+    }
+}
+
+export function playerCreated(){
+    return {
+        type: 'PLAYER_CREATED'
+    }
+}
+
 export function playerIsTraining(){
     return {
         type: 'PLAYER_TRAINING'
@@ -127,5 +139,18 @@ export function newPlayerModalShow(showModal){
     return {
         type: 'NEW_PLAYER_MODAL_SHOW',
         showModal
+    }
+}
+
+export function isEnlisted(value){
+    return {
+        type: 'IS_PLAYER_ENLISTED',
+        value
+    }
+}
+
+export function playerChangingEnlisting(){
+    return {
+        type: 'PLAYER_CHANGING_ENLISTING'
     }
 }

@@ -1,11 +1,11 @@
-import { loadOwnedPlayers, loadWalletDetails, unselectPlayer, loadSelectedPlayer } from "./interactions";
-import { playerFinishedResting, playerFinishedTraining } from "./actions";
+import { loadOwnedPlayers, loadWalletDetails, unselectPlayer, loadSelectedPlayer, checkIfPlayerEnlisted } from "./interactions";
+import { playerFinishedResting, playerFinishedTraining, playerCreated } from "./actions";
 
 export const subscribeToTransferEvents = async (dispatch, tennisPlayer, tennisPlayerSocket, account) => {
-    tennisPlayerSocket.events.Transfer({})
+    tennisPlayerSocket.events.Transfer({filter: {to: account}})
         .on('data', async function(event){
-            console.log("Transfer event found!");
             await loadOwnedPlayers(dispatch, tennisPlayer, account);
+            dispatch(playerCreated());
         })
         .on('error', console.error);
 }
@@ -22,6 +22,14 @@ export const subscribeToTrainingEvents = async (dispatch, tennisPlayer, tennisPl
         .once('data', async function(event) {
             await loadSelectedPlayer(dispatch, tennisPlayer, tennisPlayerSocket, playerId);
             dispatch(playerFinishedResting());
+        })
+        .on('error', console.error);
+}
+
+export const subscribeToMatchEvents = async (dispatch, tennisPlayer, tennisPlayerSocket, playerId) => {
+    tennisPlayerSocket.events.Enlist({filter: {playerId: playerId}})
+        .once('data', async function(event) {
+            await checkIfPlayerEnlisted(dispatch, tennisPlayer, playerId);
         })
         .on('error', console.error);
 }

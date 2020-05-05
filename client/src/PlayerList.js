@@ -1,13 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Button, Modal, Nav} from 'react-bootstrap';
-import { tennisPlayerSelector, accountLoadedSelector, gameLoadedSelector, tennisPlayerLoadedSelector, accountSelector, ownedPlayersSelector, newPlayerNameSelector, newPlayerAgeSelector, newPlayerHeightSelector, gameSelector, showNewPlayerModalSelector, tennisPlayerSocketSelector } from './redux/selectors';
+import {Button, Modal, Nav, Spinner} from 'react-bootstrap';
+import { tennisPlayerSelector, accountLoadedSelector, gameLoadedSelector, tennisPlayerLoadedSelector, accountSelector, ownedPlayersSelector, newPlayerNameSelector, newPlayerAgeSelector, newPlayerHeightSelector, gameSelector, showNewPlayerModalSelector, tennisPlayerSocketSelector, creatingPlayerSelector } from './redux/selectors';
 import { newPlayerNameChange, newPlayerAgeChange, newPlayerHeightChange, newPlayerModalShow} from "./redux/actions";
 import { createNewPlayer, loadSelectedPlayer } from './redux/interactions';
 
 const playerSelected = (props, id, e) => {
     e.preventDefault();
-    console.log(id);
     const {dispatch, tennisPlayer, tennisPlayerSocket} = props;
     loadSelectedPlayer(dispatch, tennisPlayer, tennisPlayerSocket, id);
 }
@@ -26,11 +25,10 @@ const getOwnedPlayers = (props) => {
 class PlayerList extends Component {
     render() {
 
-        const {dispatch, game, account, newPlayerName, newPlayerAge, newPlayerHeight, showModal, tennisPlayer} = this.props;
+        const {dispatch, game, account, newPlayerName, newPlayerAge, newPlayerHeight, showModal, tennisPlayer, isPlayerBeingCreated} = this.props;
 
         const newPlayer = async (e) => {
             e.preventDefault();
-            console.log(newPlayerName, newPlayerAge, newPlayerHeight);
             await createNewPlayer(dispatch, game, account, newPlayerName, newPlayerAge, newPlayerHeight, tennisPlayer);
             closeModal();
         }
@@ -85,7 +83,7 @@ class PlayerList extends Component {
                     {this.props.showOwnedPlayers ? getOwnedPlayers(this.props) : <></>}
                 </Nav>
                 <Button variant="primary" onClick={openModal}>
-                    Create New Player
+                    {isPlayerBeingCreated ? <><Spinner as="span" animation="grow" size="sm" role="status" aria-hidden="true" />Training...</> : <>Create New Player</>}
                 </Button>
             </>
         )
@@ -106,7 +104,8 @@ function mapStateToProps(state){
         newPlayerName: newPlayerNameSelector(state),
         newPlayerAge: newPlayerAgeSelector(state),
         newPlayerHeight: newPlayerHeightSelector(state),
-        showModal: showNewPlayerModalSelector(state)
+        showModal: showNewPlayerModalSelector(state),
+        isPlayerBeingCreated: creatingPlayerSelector(state)
 	}
 }
 

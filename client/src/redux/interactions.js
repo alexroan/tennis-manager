@@ -1,8 +1,8 @@
 import {getWeb3, getWeb3Socket} from "../getWeb3";
 import Game from "../contracts/Game.json";
 import TennisPlayer from "../contracts/TennisPlayer.json";
-import {web3Loaded, accountLoaded, gameLoaded, tennisPlayerLoaded, ownedPlayersLoaded, playerDetailsLoaded, clearSelectedPlayer, trainableAttributeSelected, trainingDetailsLoaded, playerIsTraining, playerFinishedTraining, playerIsResting, playerFinishedResting, web3SocketLoaded, tennisPlayerSocketLoaded} from "./actions";
-import { subscribeToTransferEvents, subscribeToAccountsChanging, subscribeToTrainingEvents } from "./subscriptions";
+import {web3Loaded, accountLoaded, gameLoaded, tennisPlayerLoaded, ownedPlayersLoaded, playerDetailsLoaded, clearSelectedPlayer, trainableAttributeSelected, trainingDetailsLoaded, playerIsTraining, playerFinishedTraining, playerIsResting, playerFinishedResting, web3SocketLoaded, tennisPlayerSocketLoaded, creatingPlayer, isEnlisted, playerChangingEnlisting} from "./actions";
+import { subscribeToTransferEvents, subscribeToAccountsChanging, subscribeToTrainingEvents, subscribeToMatchEvents } from "./subscriptions";
 
 export const loadWeb3 = async (dispatch) => {
     const web3 = await getWeb3();
@@ -51,7 +51,6 @@ export const loadWalletDetails = async (dispatch, web3, web3Socket, tennisPlayer
 export const loadWallet = async (dispatch, web3) => {
     const accounts = await web3.eth.getAccounts();
     const account = accounts[0];
-    console.log("accounts:", accounts);
     dispatch(accountLoaded(account));
     return account;
 }
@@ -65,7 +64,7 @@ export const loadOwnedPlayers = async (dispatch, tennisPlayer, account) => {
 export const createNewPlayer = async (dispatch, game, account, name, age, height, tennisPlayer) => {
     game.methods.newPlayer(name, age, height).send({from: account})
         .once('transactionHash', (hash) => {
-            console.log("hash");
+            dispatch(creatingPlayer());
         })
         .on('error', (error) => {
             console.log(error);
@@ -76,6 +75,8 @@ export const loadSelectedPlayer = async (dispatch, tennisPlayer, tennisPlayerSoc
     const player = await tennisPlayer.methods.players(id).call();
     dispatch(playerDetailsLoaded(player, id));
     subscribeToTrainingEvents(dispatch, tennisPlayer, tennisPlayerSocket, id);
+    subscribeToMatchEvents(dispatch, tennisPlayer, tennisPlayerSocket, id);
+    checkIfPlayerEnlisted(dispatch, tennisPlayer, id);
     return player;
 }
 
@@ -110,6 +111,22 @@ export const restPlayer = async (dispatch, tennisPlayer, playerId, account) => {
     tennisPlayer.methods.rest(playerId).send({from: account})
         .once('transactionHash', (hash) => {
             dispatch(playerIsResting());
+        })
+        .on('error', (error) => {
+            console.log(error);
+        });
+}
+
+export const checkIfPlayerEnlisted = async (dispatch, tennisPlayer, playerId) => {
+    const enlisted = await tennisPlayer.methods.enlistedPlayers(playerId).call();
+    dispatch(isEnlisted(enlisted));
+    return enlisted;
+}
+
+export const enlistToCompete = async (dispatch, tennisPlayer, playerId, account) => {
+    tennisPlayer.methods.enlist(playerId).send({from: account})
+        .once('transactionHash', (hash) => {
+            dispatch(playerChangingEnlisting());
         })
         .on('error', (error) => {
             console.log(error);
