@@ -154,3 +154,22 @@ export function playerChangingEnlisting(){
         type: 'PLAYER_CHANGING_ENLISTING'
     }
 }
+
+export function changeOpponentId(id) {
+    return {
+        type: 'CHANGE_OPPONENT_ID',
+        id
+    }
+}
+
+export function matchStarting() {
+    return {
+        type: 'MATCH_STARTING'
+    }
+}
+
+export function matchFinished() {
+    return {
+        type: 'MATCH_FINISHED'
+    }
+}

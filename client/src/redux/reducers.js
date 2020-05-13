@@ -38,6 +38,12 @@ function competing(state = {}, action) {
             return { ...state, enlistingChanging: false, isEnlisted: action.value }
         case 'PLAYER_CHANGING_ENLISTING':
             return { ...state, enlistingChanging: true }
+        case 'CHANGE_OPPONENT_ID':
+            return { ...state, opponentId: action.id }
+        case 'MATCH_STARTING':
+            return { ...state, playingMatch: true }
+        case 'MATCH_FINISHED':
+            return { ...state, playingMatch: false }
         default:
             return state;
     }

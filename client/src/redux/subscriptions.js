@@ -1,5 +1,5 @@
 import { loadOwnedPlayers, loadWalletDetails, unselectPlayer, loadSelectedPlayer, checkIfPlayerEnlisted } from "./interactions";
-import { playerFinishedResting, playerFinishedTraining, playerCreated } from "./actions";
+import { playerFinishedResting, playerFinishedTraining, playerCreated, matchFinished } from "./actions";
 
 export const subscribeToTransferEvents = async (dispatch, tennisPlayer, tennisPlayerSocket, account) => {
     tennisPlayerSocket.events.Transfer({filter: {to: account}})
@@ -30,6 +30,18 @@ export const subscribeToMatchEvents = async (dispatch, tennisPlayer, tennisPlaye
     tennisPlayerSocket.events.Enlist({filter: {playerId: playerId}})
         .once('data', async function(event) {
             await checkIfPlayerEnlisted(dispatch, tennisPlayer, playerId);
+        })
+        .on('error', console.error);
+    tennisPlayerSocket.events.Delist({filter: {playerId: playerId}})
+        .once('data', async function(event) {
+            await checkIfPlayerEnlisted(dispatch, tennisPlayer, playerId);
+        })
+        .on('error', console.error);
+
+    tennisPlayerSocket.events.MatchPlayed({filter: {playerId: playerId}})
+        .once('data', async function(event) {
+            await loadSelectedPlayer(dispatch, tennisPlayer, tennisPlayerSocket, playerId);
+            dispatch(matchFinished());
         })
         .on('error', console.error);
 }

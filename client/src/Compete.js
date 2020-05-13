@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Card, Button} from 'react-bootstrap';
-import { tennisPlayerSelector, selectedPlayerIdSelector, accountSelector, isEnlistedSelector } from './redux/selectors';
-import { enlistToCompete } from './redux/interactions';
+import {Card, Button, Form} from 'react-bootstrap';
+import { tennisPlayerSelector, selectedPlayerIdSelector, accountSelector, isEnlistedSelector, opponentIdSelector } from './redux/selectors';
+import { enlistToCompete, getEnlistedPlayers, delistToCompete, opponentIdChanged, playMatch } from './redux/interactions';
 
 const enlistPlayer = (props, e) => {
     e.preventDefault();
@@ -10,10 +10,27 @@ const enlistPlayer = (props, e) => {
     enlistToCompete(dispatch, tennisPlayer, playerId, account);
 }
 
+const delistPlayer = (props, e) => {
+    e.preventDefault();
+    const {dispatch, tennisPlayer, playerId, account} = props;
+    delistToCompete(dispatch, tennisPlayer, playerId, account);
+}
+
+const changeOpponentId = (props, e) => {
+    const {dispatch} = props;
+    opponentIdChanged(dispatch, e.target.value);
+}
+
+const beginMatch = (props, e) => {
+    e.preventDefault();
+    const {dispatch, tennisPlayer, playerId, account, opponentId} = props;
+    playMatch(dispatch, tennisPlayer, playerId, account, opponentId);
+}
+
 class Compete extends Component {
 
     render() {    
-        const {isEnlisted} = this.props;
+        const {dispatch, tennisPlayer, isEnlisted} = this.props;
 
         if (!isEnlisted) {
             return (
@@ -22,18 +39,46 @@ class Compete extends Component {
                         Enlist To Compete
                     </Card.Header>
                     <Card.Body>
-                        <form onSubmit={(e) => enlistPlayer(this.props, e)}>
-                            <Button className="form-control" type="submit">
+                        <Form onSubmit={(e) => enlistPlayer(this.props, e)}>
+                            <Button type="submit">
                                 Enlist
                             </Button>
-                        </form>
+                        </Form>
                     </Card.Body>
                 </Card>
             )
         }
         else {
+            getEnlistedPlayers(dispatch, tennisPlayer);
             return (
-                <>ENLISTED</>
+                <Card>
+                    <Card.Header>
+                        Enlisted
+                    </Card.Header>
+                    <Card.Body>
+                        <Form onSubmit={(e) => delistPlayer(this.props, e)}>
+                            <Button type="submit">
+                                Delist
+                            </Button>
+                        </Form>
+                    </Card.Body>
+                    <Card.Header>
+                        Play Match
+                    </Card.Header>
+                    <Card.Body>
+                        <Form onSubmit={(e) => beginMatch(this.props, e)}>
+                            <Form.Group>
+                                <Form.Label>
+                                    Opponent ID
+                                </Form.Label>
+                                <Form.Control onChange={(e) => changeOpponentId(this.props, e)} type="number" min="0" />
+                            </Form.Group>
+                            <Button type="submit">
+                                Play Match!
+                            </Button>
+                        </Form>
+                    </Card.Body>
+                </Card>
             )
         }
     }
@@ -44,7 +89,8 @@ function mapStateToProps(state){
         isEnlisted: isEnlistedSelector(state),
         tennisPlayer: tennisPlayerSelector(state),
         playerId: selectedPlayerIdSelector(state),
-        account: accountSelector(state)
+        account: accountSelector(state),
+        opponentId: opponentIdSelector(state)
 	}
 }
 
