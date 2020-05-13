@@ -1,9 +1,8 @@
 import {getWeb3, getWeb3Socket} from "../getWeb3";
 import Game from "../contracts/Game.json";
 import TennisPlayer from "../contracts/TennisPlayer.json";
-import {web3Loaded, accountLoaded, gameLoaded, tennisPlayerLoaded, ownedPlayersLoaded, playerDetailsLoaded, clearSelectedPlayer, trainableAttributeSelected, trainingDetailsLoaded, playerIsTraining, playerFinishedTraining, playerIsResting, playerFinishedResting, web3SocketLoaded, tennisPlayerSocketLoaded, creatingPlayer, isEnlisted, playerChangingEnlisting, changeOpponentId, matchStarting} from "./actions";
+import {web3Loaded, accountLoaded, gameLoaded, tennisPlayerLoaded, ownedPlayersLoaded, playerDetailsLoaded, clearSelectedPlayer, trainableAttributeSelected, trainingDetailsLoaded, playerIsTraining, playerIsResting, web3SocketLoaded, tennisPlayerSocketLoaded, creatingPlayer, isEnlisted, playerChangingEnlisting, changeOpponentId, matchStarting, closeResult} from "./actions";
 import { subscribeToTransferEvents, subscribeToAccountsChanging, subscribeToTrainingEvents, subscribeToMatchEvents } from "./subscriptions";
-import { selectedPlayerDetailsSelector } from "./selectors";
 
 export const loadWeb3 = async (dispatch) => {
     const web3 = await getWeb3();
@@ -165,4 +164,8 @@ export const getEnlistedPlayers = async (dispatch, tennisPlayer) => {
         const element = filteredEnlistEvents[i];
         console.log(element);
     }
+}
+
+export const closeResultModal = (dispatch) => {
+    dispatch(closeResult());
 }

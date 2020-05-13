@@ -23,7 +23,7 @@ class Connections extends Component {
             preventDefaultIfNeeded(e);
             const gameContract = await loadGameContract(dispatch, web3);
             const tennisPlayer = await loadTennisPlayerContract(dispatch, web3, gameContract);
-            const tennisPlayerSocket = await loadTennisPlayerSocket(dispatch, web3Socket, gameContract);
+            await loadTennisPlayerSocket(dispatch, web3Socket, gameContract);
             await loadTrainingCosts(dispatch, tennisPlayer);
         }
 

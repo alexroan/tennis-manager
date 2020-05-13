@@ -168,8 +168,15 @@ export function matchStarting() {
     }
 }
 
-export function matchFinished() {
+export function matchFinished(returnValues) {
     return {
-        type: 'MATCH_FINISHED'
+        type: 'MATCH_FINISHED',
+        returnValues
     }
+}
+
+export function closeResult(){
+    return {
+        type: 'CLOSE_RESULT'
+    } 
 }

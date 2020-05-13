@@ -43,7 +43,13 @@ function competing(state = {}, action) {
         case 'MATCH_STARTING':
             return { ...state, playingMatch: true }
         case 'MATCH_FINISHED':
-            return { ...state, playingMatch: false }
+            let matchResult = "lose";
+            if( action.returnValues.winner === action.returnValues.playerId) {
+                matchResult = "win";
+            }
+            return { ...state, playingMatch: false, matchResult: matchResult, showResult: true}
+        case 'CLOSE_RESULT':
+            return { ...state, showResult: false}
         default:
             return state;
     }

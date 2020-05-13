@@ -41,7 +41,7 @@ export const subscribeToMatchEvents = async (dispatch, tennisPlayer, tennisPlaye
     tennisPlayerSocket.events.MatchPlayed({filter: {playerId: playerId}})
         .once('data', async function(event) {
             await loadSelectedPlayer(dispatch, tennisPlayer, tennisPlayerSocket, playerId);
-            dispatch(matchFinished());
+            dispatch(matchFinished(event.returnValues));
         })
         .on('error', console.error);
 }

@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Card, Button, Form} from 'react-bootstrap';
-import { tennisPlayerSelector, selectedPlayerIdSelector, accountSelector, isEnlistedSelector, opponentIdSelector } from './redux/selectors';
-import { enlistToCompete, getEnlistedPlayers, delistToCompete, opponentIdChanged, playMatch } from './redux/interactions';
+import {Card, Button, Form, Spinner, Modal} from 'react-bootstrap';
+import { tennisPlayerSelector, selectedPlayerIdSelector, accountSelector, isEnlistedSelector, opponentIdSelector, playingMatchSelector, showResultSelector, matchResultSelector } from './redux/selectors';
+import { enlistToCompete, delistToCompete, opponentIdChanged, playMatch, closeResultModal } from './redux/interactions';
 
 const enlistPlayer = (props, e) => {
     e.preventDefault();
@@ -27,10 +27,29 @@ const beginMatch = (props, e) => {
     playMatch(dispatch, tennisPlayer, playerId, account, opponentId);
 }
 
+const playForm = (props) => {
+    return (
+        <Form onSubmit={(e) => beginMatch(props, e)}>
+            <Form.Group>
+                <Form.Label>
+                    Opponent ID
+                </Form.Label>
+                <Form.Control onChange={(e) => changeOpponentId(props, e)} type="number" min="0" />
+            </Form.Group>
+            <Button type="submit">
+                Play Match!
+            </Button>
+        </Form>
+    );
+}
+
 class Compete extends Component {
 
+    
     render() {    
-        const {dispatch, tennisPlayer, isEnlisted} = this.props;
+        const {dispatch, isEnlisted, playingMatch, showResult, matchResult} = this.props;
+
+        const closeModal = () => closeResultModal(dispatch);
 
         if (!isEnlisted) {
             return (
@@ -49,36 +68,35 @@ class Compete extends Component {
             )
         }
         else {
-            getEnlistedPlayers(dispatch, tennisPlayer);
             return (
-                <Card>
-                    <Card.Header>
-                        Enlisted
-                    </Card.Header>
-                    <Card.Body>
-                        <Form onSubmit={(e) => delistPlayer(this.props, e)}>
-                            <Button type="submit">
-                                Delist
+                <>
+                    <Card>
+                        <Card.Header>
+                            Enlisted
+                        </Card.Header>
+                        <Card.Body>
+                            <Form onSubmit={(e) => delistPlayer(this.props, e)}>
+                                <Button type="submit">
+                                    Delist
+                                </Button>
+                            </Form>
+                        </Card.Body>
+                        <Card.Header>
+                            Play Match
+                        </Card.Header>
+                        <Card.Body>
+                            {playingMatch ? <Spinner animation="border" /> : playForm(this.props)}
+                        </Card.Body>
+                    </Card>
+                    <Modal show={showResult} onHide={closeModal}>
+                        <Modal.Header>{matchResult}</Modal.Header>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={closeModal}>
+                                Close
                             </Button>
-                        </Form>
-                    </Card.Body>
-                    <Card.Header>
-                        Play Match
-                    </Card.Header>
-                    <Card.Body>
-                        <Form onSubmit={(e) => beginMatch(this.props, e)}>
-                            <Form.Group>
-                                <Form.Label>
-                                    Opponent ID
-                                </Form.Label>
-                                <Form.Control onChange={(e) => changeOpponentId(this.props, e)} type="number" min="0" />
-                            </Form.Group>
-                            <Button type="submit">
-                                Play Match!
-                            </Button>
-                        </Form>
-                    </Card.Body>
-                </Card>
+                        </Modal.Footer>
+                    </Modal>
+                </>
             )
         }
     }
@@ -90,7 +108,10 @@ function mapStateToProps(state){
         tennisPlayer: tennisPlayerSelector(state),
         playerId: selectedPlayerIdSelector(state),
         account: accountSelector(state),
-        opponentId: opponentIdSelector(state)
+        opponentId: opponentIdSelector(state),
+        playingMatch: playingMatchSelector(state),
+        showResult: showResultSelector(state),
+        matchResult: matchResultSelector(state)
 	}
 }
 
