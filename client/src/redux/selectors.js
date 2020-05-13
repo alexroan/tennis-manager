@@ -87,6 +87,9 @@ export const isRestingSelector = createSelector(isResting, a => a);
 const isEnlisted = state => get(state, 'competing.isEnlisted', false);
 export const isEnlistedSelector = createSelector(isEnlisted, a => a);
 
+const enlistedPlayers = state => get(state, 'competing.enlistedPlayers', []);
+export const enlistedPlayersSelector = createSelector(enlistedPlayers, a => a);
+
 const opponentId = state => get(state, 'competing.opponentId', false);
 export const opponentIdSelector = createSelector(opponentId, a => a);
 

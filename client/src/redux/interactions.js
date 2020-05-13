@@ -1,7 +1,7 @@
 import {getWeb3, getWeb3Socket} from "../getWeb3";
 import Game from "../contracts/Game.json";
 import TennisPlayer from "../contracts/TennisPlayer.json";
-import {web3Loaded, accountLoaded, gameLoaded, tennisPlayerLoaded, ownedPlayersLoaded, playerDetailsLoaded, clearSelectedPlayer, trainableAttributeSelected, trainingDetailsLoaded, playerIsTraining, playerIsResting, web3SocketLoaded, tennisPlayerSocketLoaded, creatingPlayer, isEnlisted, playerChangingEnlisting, changeOpponentId, matchStarting, closeResult} from "./actions";
+import {web3Loaded, accountLoaded, gameLoaded, tennisPlayerLoaded, ownedPlayersLoaded, playerDetailsLoaded, clearSelectedPlayer, trainableAttributeSelected, trainingDetailsLoaded, playerIsTraining, playerIsResting, web3SocketLoaded, tennisPlayerSocketLoaded, creatingPlayer, isEnlisted, playerChangingEnlisting, changeOpponentId, matchStarting, closeResult, setEnlistedPlayers} from "./actions";
 import { subscribeToTransferEvents, subscribeToAccountsChanging, subscribeToTrainingEvents, subscribeToMatchEvents } from "./subscriptions";
 
 export const loadWeb3 = async (dispatch) => {
@@ -157,13 +157,20 @@ export const playMatch = async (dispatch, tennisPlayer, playerId, account, oppon
         });
 }
 
-export const getEnlistedPlayers = async (dispatch, tennisPlayer) => {
+export const getEnlistedPlayers = async (dispatch, tennisPlayer, playerId) => {
     const enlistEvents = await tennisPlayer.getPastEvents("Enlist", {fromBlock:0, toBlock:'latest'});
     const filteredEnlistEvents = [...new Set(enlistEvents.map(item => item.returnValues.playerId))];
+    let enlistedPlayers = [];
     for (let i = (filteredEnlistEvents.length-1); i >= 0; i--) {
         const element = filteredEnlistEvents[i];
-        console.log(element);
+        if (element !== playerId){
+            let isEnlisted = await tennisPlayer.methods.enlistedPlayers(element).call();
+            if (isEnlisted) {
+                enlistedPlayers.push(element);
+            }
+        }
     }
+    dispatch(setEnlistedPlayers(enlistedPlayers));
 }
 
 export const closeResultModal = (dispatch) => {

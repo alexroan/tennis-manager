@@ -180,3 +180,10 @@ export function closeResult(){
         type: 'CLOSE_RESULT'
     } 
 }
+
+export function setEnlistedPlayers(players){
+    return {
+        type: 'ENLISTED_PLAYERS',
+        players
+    }
+}

@@ -35,6 +35,9 @@ class Content extends Component {
                             <Tab eventKey="compete" title="Compete">
                                 <Compete />
                             </Tab>
+                            <Tab eventKey="results" title="Results">
+                                Results Tab
+                            </Tab>
                         </Tabs>
                     </Col>
                 </Row>
